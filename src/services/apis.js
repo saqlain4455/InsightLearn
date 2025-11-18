@@ -16,7 +16,9 @@ export  const Course ={
     CREATE_COURSE:BASE_URL+"/course/createcourse",
     GET_DETAILS:BASE_URL+"/course/CourseDetails",
     GETFULL_COURSEDETAILS:BASE_URL+"/course/FullCourseDetails",
-    PAYMENT_ID:BASE_URL+"/course/payment"
+    PAYMENT_ID:BASE_URL+"/course/payment",
+    DELETE_COURSE:BASE_URL+"/course/deleteCourse",
+    
 }
 export const section ={
     CREATE_SECTION:BASE_URL+"/course/CreateSection"
@@ -26,11 +28,16 @@ export const subsection={
     
 }
 export  const User={
-    GET_USER_DETAILS:BASE_URL+"/user/userinfo"
+    GET_USER_DETAILS:BASE_URL+"/user/userinfo",
+    DELETE_USER_COURSE:BASE_URL+"/user/userupdate",
+    UPDATE_PROFILE:BASE_URL+"/Profile/updateProfilePicture",
+    UPDATE_ADDITIONAL_DETAILS:BASE_URL+"/Profile/updateProfile",
+    DELETE_USER:BASE_URL+"/Profile/deleteuser"
 }
 
 export const Ratings ={
-    CREATE_REVIEW:BASE_URL+"/course/createratingandreviews"
+    CREATE_REVIEW:BASE_URL+"/course/createratingandreviews",
+    AVGRATING:BASE_URL+"/course/averageratingandreviews"
 }
 
 export const contact={

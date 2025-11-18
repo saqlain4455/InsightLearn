@@ -8,7 +8,7 @@ const Router =express.Router()
 
 Router.put("/updateProfile",auth,updateProfile)
 Router.put("/updateProfilePicture",auth,chageProfileImage)
-Router.delete("/deleteuser",deleteDetails)
+Router.delete("/deleteuser",auth,deleteDetails)
 Router.post("/resetPassword",resetPassword)
 Router.post("/reset-password-token",resetPasswordToken)
 Router.post("/chagePassword",updatePassword)

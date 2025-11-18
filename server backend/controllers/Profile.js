@@ -7,6 +7,7 @@ import { imageUploadToCloudinary } from "../utils/mediaUploader.js"
 
  export const updateProfile= async (req,res)=>{
     try{
+        console.log(req.body)
           const {gender,dateofBirth,about,contactNumber}=req.body
     if(!gender||!dateofBirth||!about||!contactNumber){
     return res.status(400).json({
@@ -15,11 +16,15 @@ import { imageUploadToCloudinary } from "../utils/mediaUploader.js"
     }
 
     const id=req.user.id
+   
     const userInfo=  await User.findOne({_id:id})
+    console.log(userInfo)
     const additionalDetails=userInfo.additionalDetails
+    
     const updateDetails= await ProfileUser.findById({_id:additionalDetails})
-
+    
     updateDetails.gender=gender
+   
     updateDetails.dateofBirth=dateofBirth
     updateDetails.about=about
     updateDetails.contactNumber=contactNumber
@@ -40,12 +45,13 @@ import { imageUploadToCloudinary } from "../utils/mediaUploader.js"
 export const  deleteDetails = async (req,res)=>{
         try{
             const {id}=req.user
-              const userInfo=  await User.findone({_id:id})
+            console.log(id)
+              const userInfo=  await User.findOne({_id:id})
     const additionalDetails=userInfo.additionalDetails
     const courseId =userInfo.courses
-            await ProfileUser.findByIdDelete({_id:additionalDetails})
-            await Course.findByIdDelete({_id:id})
-            await   User.findByIdDelete({_id:id})
+          await ProfileUser.findOneAndDelete({ _id: additionalDetails });
+await Course.findOneAndDelete({ _id: courseId });
+await User.findOneAndDelete({ _id: id });
 
            return    res.status(200).json({
                 message:"deleted successfully"
@@ -53,7 +59,8 @@ export const  deleteDetails = async (req,res)=>{
 
         }catch(error){
                 return res.status(500).json({
-                    message:"something went wrong while dleting the account "
+                    message:"something went wrong while dleting the account ",
+                    error:error.message
                 })
         }
 }

@@ -20,6 +20,7 @@ import DashboardCourse from './Components/Homepage/DashboardCourse.jsx'
 import ReviewPage from './Components/Homepage/ReviewPage.jsx'
 import ContactForm from './Components/Homepage/Contact.jsx'
 import Cart from './Components/Homepage/Cart.jsx'
+import AdditionalDetails from './Components/Homepage/AdditionalDetails.jsx'
 function App() {
   
 
@@ -43,6 +44,7 @@ function App() {
       <Route path='/review'    element={<ReviewPage />} />
       <Route  path="/contact" element={<ContactForm />}/>
       <Route path='/cart' element={<Cart />} />
+      <Route path='/additionaldetails' element={<AdditionalDetails />} />
       </Routes>
     </div>
   )

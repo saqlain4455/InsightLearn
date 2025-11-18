@@ -3,7 +3,8 @@ import User from "../models/User.js"
 import Course from "../models/Course.js"
 import Category from "../models/Categorym.js"
 import { imageUploadToCloudinary } from "../utils/mediaUploader.js"
-
+import Categorym from "../models/Categorym.js"
+import RatingsandReviews from "../models/RatingsandReviews.js"
 
  export const createCourse= async (req,res)=>{
     try{
@@ -119,7 +120,7 @@ export  const FullCourseDetails = async (req,res)=>{
                                 }
                                 
                             })
-                            .populate("ratingaAndReviews")
+                            .populate("ratingAndReviews")
                             .populate("Category")
                             .populate("studentsEnrolled")
                             
@@ -241,7 +242,7 @@ export const DeleteCourse = async (req,res)=>{
     const {courseId} =req.body
     console.log(courseId)
     const userId =req.user.id
-    
+    console.log(userId)
     console.log(userId)
     if(!courseId||!userId){
         return res.status(400).json({
@@ -255,13 +256,21 @@ export const DeleteCourse = async (req,res)=>{
             message:"invalid Id"
         })
     }
-
+    
+    const categoryId= checkId.Category
+    console.log(checkId)
     const deletedId = await Course.findByIdAndDelete({_id:courseId})
+
     const update = await User.findByIdAndUpdate({_id:userId},
                                                 {$pull:{courses:courseId}}
     )
+    const category = await Category.findByIdAndUpdate({_id:categoryId},
+                                                    {$pull:{course:courseId}}
+    )
+    console.log(category)
     return  res.status(200).json({
-        message:"Deleted successfully"
+        message:"Deleted successfully",
+        data:deletedId
     })
      }catch(error){
         return res.status(500).json({
@@ -279,7 +288,8 @@ export const DeleteCourse = async (req,res)=>{
 export const purchasedPayment = async (req, res) => {
   try {
     const { userId, courseId } = req.body;
-
+    console.log(userId)
+    console.log(courseId)
     if (!userId || !courseId) {
       return res.status(400).json({
         message: "data is undefined"
@@ -307,6 +317,12 @@ export const purchasedPayment = async (req, res) => {
       userId,
       { $push: { courses: courseId } }
     );
+
+    await Course.findByIdAndUpdate({
+        _id:courseId
+    },
+    {$push:{studentsEnrolled:userId}}
+)
 
     return res.status(200).json({
       message: "Payment added successfully"

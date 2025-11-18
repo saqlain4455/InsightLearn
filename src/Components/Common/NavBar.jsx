@@ -1,203 +1,152 @@
-import React, { useEffect, useState } from 'react'
-import { navLinks } from '../../data/Info'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { navLinks } from '../../data/Info';
+import { Link, useNavigate } from 'react-router-dom';
 import { IoIosArrowDropdown } from "react-icons/io";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { connectionApi } from '../../services/apiconnector';
 import { controller } from '../../services/apis';
-
-import CTAButton from "../Homepage/Button.jsx"
-import { useDispatch } from 'react-redux';
+import CTAButton from "../Homepage/Button.jsx";
 import { RemoveToken } from '../../Slice/auth.js';
 import { BeatLoader } from "react-spinners";
 
 const NavBar = () => {
+    const [name, setName] = useState(navLinks[0]);
+    const token = useSelector((state) => state.auth?.token ?? null);
+    const user = token?.user ?? null;
+    const cart = useSelector((state) => state.cart);
+    const [subLinks, setSubLinks] = useState([]);
+    const [course, setCourse] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-    const [name,setName] = useState(navLinks[0])
-    const  {token}=useSelector((state)=> state.auth)
-    console.log(token)
-    const {user} = useSelector((state)=>state.auth.token)
-    console.log(user)
-    const  {cart}=useSelector((state)=> state.cart)
-    const [subLinks,setSubLinks]= useState([])
-    const navigate= useNavigate()
-    const dispatch= useDispatch()
-    const [loading,setLoading]=useState(false)
-    const [course,setCourse]=useState([])
-    
-        const changeName= (value)=>{
-            setName(value)
-           
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    // Change active nav link
+    const changeName = (value) => setName(value);
+
+    // Fetch categories
+    const getCategory = async () => {
+        try {
+            const data = await connectionApi(controller.CATEGORIES_API, "GET");
+            setSubLinks(data?.data?.data ?? []);
+        } catch (error) {
+            console.log("Error fetching categories:", error);
         }
-         const getCategory = async()=>{
-                        try{
-                            const data= await connectionApi( controller.CATEGORIES_API,"GET")
-                            setSubLinks(data.data.data)
-                            console.log(data.data.data)
-                        }catch(error){
-                            console.log("error ocured while fecthiong the data ")
-            
-                        }
-                    }
+    };
 
-                    
-        
-        useEffect(()=>{
-            getCategory()
-            
-        },[])
+    // Logout
+    const handleLogout = () => {
+        dispatch(RemoveToken());
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
 
-        function clicled2(){
-           
-            const  value =  dispatch(RemoveToken())
-            localStorage.removeItem("token")
-            navigate("/login")
+    // Fetch courses by category
+    const handleCategoryClick = async (e) => {
+        try {
+            const value = e.target.value;
+            const req = await connectionApi(controller.GETDETAILSBYID, "POST", null, null, { categoryId: value });
+            const categoryData = req?.data?.data ?? {};
+            const coursesData = categoryData?.course ?? [];
+            console.log(categoryData)
+            console.log(coursesData)
+            setCourse(categoryData);
+
+            navigate("/courseDetails", {
+                state: { category: categoryData, courses: coursesData }
+            });
+        } catch (error) {
+            console.log("Error fetching courses:", error);
         }
+    };
 
-       async  function clicked3 (e){
-        try{
-                 const {value}=e.target
-                 console.log(value)
-            const req= await connectionApi(controller.GETDETAILSBYID,
-                                            "POST",
-                                            null,
-                                            null,
-                                            {categoryId:value}
-            )
+    useEffect(() => {
+        getCategory();
+    }, []);
 
-            console.log("courses details:",req)
-            setCourse(req)
-    navigate("/courseDetails", {
-  state: {
-    category: req.data.data,       
-    courses: req.data.data.course  
-  }
-});
-        }catch(error){
-            console.log("error occured while getting the category",error)
-        }
-       }
-  return (
-         loading?
-            <div className='w-11/12  lg:h-[600px] mx-auto  flex flex-row items-center  justify-center  '>
-              <BeatLoader
-      color="#EAB308"
-      margin={3}
-      size={15}
-    />
-    </div>:
-    
-    <div className='h=[30px]  border-b mt-5'>
-    <div className='w-11/12 max-w-maxContent mx-auto flex flex-row justify-evenly items-center text-white   gap-4   lg:ml-[150px]'>
-     <div  className=' text-xl   '>
-        <h3>Logo</h3>
-     </div>
-
-        <div className='flex flex-row gap-6 items-center text-[18px]  justify-center font-semibold  '>
-            {
-
-            
-            navLinks.map((link,index)=>{
-                return  ( <Link className={`${link.name===name?"text-yellow-400 text-black" :"text-sky-300"}`} onClick={()=>changeName(link.name)} key={index} to={link.link}>
-             {link.name === "Catalog" ? (
-  <div className="flex flex-row items-center gap-1 relative group">
-  {link.name} <IoIosArrowDropdown />
-
-  {/* Diamond pointer */}
-  <div className="absolute top-full left-[35px] w-3 h-3 bg-white rotate-45 opacity-0 invisible 
-    group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-300 shadow-md"></div>
-
-  {/* Dropdown box */}
-  <div className="absolute top-[calc(100%+6px)] left-0 opacity-0 invisible 
-    group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-300 
-    bg-white lg:h-[50px] lg:w-[200px] shadow-md text-black text-[15px] flex  flex-col  justify-center">
-
-        {
-            subLinks.map((link)=>(
-                <div className='flex flex-col text-black'>
-                    <button onClick={clicked3} value={link._id} className='text-black'>
-                        {link.name}
-                    </button>
-                    
-                </div>
-                
-                
-            ))
-        }
-    
-  </div>
-</div>
-
-
-) : (
-  <div>{link.name}</div>
-)}
-
- 
-
-                   
-                </Link> )
-            })}
-        </div>
-
-            <div className='flex flex-row gap-3 items-center mb-3'>
-               
-
-               {
-                token===null &&(
-                    <div className=' font-bold'>
-                     <CTAButton active={true} linkto={"/Login"} 
-                    >
-                        Login
-                    </CTAButton>
-                    </div>
-                )
-               }
-               {
-                token===null &&(
-                    <div className=' font-bold'>
-                        
-                    <CTAButton active={false} linkto={"/signup"} 
-                    >
-                        SignUp
-                    </CTAButton>
-                    
-                    </div>
-                )
-               }
-                {token&&(
-                    <div onClick={clicled2}>
-                        <CTAButton active={true} >
-                            Logout
-                        </CTAButton>
-                        </div>
-                )
-                
-                }
-
-                {
-                    token&&(
-                        <div >
-                            <img  className="w-10 rounded-full border " src={token.user.image} />
-                        </div>
-                    )
-                }
-                {
-                    user.accountType==="Student"&&(
-                        <div >
-                            <Link to={"/cart"}>
-                            add to cart 
-                            </Link>
-                        </div>
-                    )
-                }
-              
-
+    if (loading) {
+        return (
+            <div className='w-11/12 lg:h-[600px] mx-auto flex items-center justify-center'>
+                <BeatLoader color="#EAB308" margin={3} size={15} />
             </div>
+        );
+    }
 
-    </div>
-     </div>
-  )
-}
+    return (
+        <div className='border-b mt-5'>
+            <div className='w-11/12 max-w-maxContent mx-auto flex justify-evenly items-center text-white gap-4 lg:ml-[150px]'>
+                
+                {/* Logo */}
+                <div className='text-xl'><h3>Logo</h3></div>
 
-export default NavBar
+                {/* Navigation Links */}
+                <div className='flex gap-6 items-center text-[18px] font-semibold'>
+                    {navLinks.map((link, index) => (
+                        <Link
+                            key={index}
+                            to={link.link}
+                            className={`${link.name === name ? "text-yellow-400 text-black" : "text-sky-300"}`}
+                            onClick={() => changeName(link.name)}
+                        >
+                            {link.name === "Catalog" ? (
+                                <div className="flex items-center gap-1 relative group">
+                                    {link.name} <IoIosArrowDropdown />
+
+                                    {/* Diamond pointer */}
+                                    <div className="absolute top-full left-[35px] w-3 h-3 bg-white rotate-45 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-300 shadow-md"></div>
+
+                                    {/* Dropdown box */}
+                                    <div className="absolute top-[calc(100%+6px)] left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 delay-300 bg-white lg:h-[50px] lg:w-[200px] shadow-md text-black text-[15px] flex flex-col justify-center">
+                                        {subLinks.map((sublink, idx) => (
+                                            <button
+                                                key={idx}
+                                                value={sublink?._id}
+                                                onClick={handleCategoryClick}
+                                                className='text-black text-left p-2'
+                                            >
+                                                {sublink?.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div>{link.name}</div>
+                            )}
+                        </Link>
+                    ))}
+                </div>
+
+                {/* Right Buttons */}
+                <div className='flex gap-3 items-center mb-3'>
+                    {!token && (
+                        <>
+                            <CTAButton active={true} linkto={"/Login"}>Login</CTAButton>
+                            <CTAButton active={false} linkto={"/signup"}>SignUp</CTAButton>
+                        </>
+                    )}
+
+                    {token && (
+                        <>
+                            <div onClick={handleLogout}>
+                                <CTAButton active={true}>Logout</CTAButton>
+                            </div>
+                            <div> 
+                                <Link to="/additionaldetails">
+                                <img className="w-10 rounded-full border" src={user?.image} alt="Profile" />
+                                </Link>
+                            </div>
+                        </>
+                    )}
+
+                    {user?.accountType === "Student" && (
+                        <div>
+                            <Link to={"/cart"}>Add to cart</Link>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default NavBar;

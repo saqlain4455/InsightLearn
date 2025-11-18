@@ -293,3 +293,38 @@ export const updatePassword = async (req, res) => {
                 })
         }
 }
+
+
+
+
+export  const updateUser =  async (req,res)=>{
+    try{
+
+    
+    const  {courseId} = req.body
+    const userId= req.user.id
+        console.log(userId)
+         console.log(courseId)
+    if(!userId||!courseId){
+        return res.status(400).json({
+            message:"data is undefined "
+        })
+    }
+
+    const response  =await User.findByIdAndUpdate({_id:userId},
+                                                    {$pull:{courses:courseId}}
+    )
+    console.log(response)
+
+    return res.status(200).json({
+        message:"deleted successfully",
+        data:response._id
+    })
+    }catch(error){
+        return res.status(500).json({
+            message:"error occureed while updating the user ",
+            error:error.message
+        })
+    }
+
+}

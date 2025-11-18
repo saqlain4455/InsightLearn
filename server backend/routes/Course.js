@@ -27,7 +27,7 @@ Router.delete("/deletesubsection",auth,isInstructor,deleteSunSection)
 
 /*ratingandreviews*/
 Router.post("/createratingandreviews",auth,isStudent,createReviews)
-Router.get("/averageratingandreviews",averageRating)
+Router.post("/averageratingandreviews",averageRating)
 Router.get("/getAllReviewsandreviews",getAllReviews)
 /*createCategory*/
 Router.post("/createCategory",auth,isAdmin,createCategory)

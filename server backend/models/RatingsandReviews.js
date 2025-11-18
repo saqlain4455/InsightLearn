@@ -22,7 +22,7 @@ const RatingAndReviewSchema= mongoose.Schema({
         }
 })
 
-export default mongoose.model("RatingsAndReviews", RatingAndReviewSchema);
+export default mongoose.model("RatingAndReview", RatingAndReviewSchema);
 
 
 

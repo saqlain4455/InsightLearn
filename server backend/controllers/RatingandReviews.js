@@ -4,22 +4,19 @@ import RatingsandReviews from "../models/RatingsandReviews.js"
 
 export  const createReviews = async (req,res)=>{
     try{
-          const {courseid,rating,review}= req.body
+          const {courseId,rating,review}= req.body
           const userId= req.user.id
-          console.log(userId)
-          console.log(courseid)
-          console.log(rating)
-            console.log(review)
-    if(!courseid||!rating||!review||!userId){
+         
+    if(!courseId||!rating||!review||!userId){
         return res.status(404).json({
             message:"data is undefined "
         })
     }
 
-    const courseId = await Course.findOne({_id:courseid,
+    const course = await Course.findOne({_id:courseId,
                                             studentsEnrolled:{$elemMatch:{$eq:userId}}
     })
-                if(!courseId){
+                if(!course){
                     return res.status(404).json({
                         message:"you can't give the review"
                     })
@@ -27,7 +24,7 @@ export  const createReviews = async (req,res)=>{
 
        
       const checkingUser = await RatingsandReviews.findOne({user:userId,
-                                                            course:courseid
+                                                            course:courseId
       })
       if(checkingUser){
         return res.status(500).json({
@@ -37,14 +34,14 @@ export  const createReviews = async (req,res)=>{
 
 
 
-    const newrating = await RatingsandReviews.create({user:userId,
+      const newrating = await RatingsandReviews.create({user:userId,
                                                    rating:rating,
                                                    review:review,
-                                                   course:courseid
+                                                   course:courseId
     })
 
-    const ratingAndReviewsDetails= await Course.findByIdAndUpdate({_id:courseid},
-                                                {$push:{ratingaAndReviews:newrating._id}}
+    const ratingAndReviewsDetails= await Course.findByIdAndUpdate({_id:courseId},
+                                                {$push:{ratingAndReviews:newrating._id}}
     )
 
         return res.status(200).json({
@@ -61,36 +58,51 @@ export  const createReviews = async (req,res)=>{
 
 }
 
-export const averageRating = async (req,res)=>{
-    try{
-               const courseId=req.body.courseId
-    const average = await RatingsandReviews.aggregate([
-            {
-                $match:{
-                    course: new mongoose.Types.ObjectId(courseId)
-                }
-            },
-            {
-                $group:{
-                    _id:null,
-                    averageRating:{$avg:"$rating"}
-                }
-            }
-    ])
-        if(average.length>0){
-            res.status(200).json({
-                message:"average success",
-                averageRating:average[0]
-            })
-        }
-    }catch(error){
-        return res.status(200).json({
-            message:"average error"
-        })
+export const averageRating = async (req, res) => {
+  try {
+    
+    const { courseId } = req.body;
+    console.log(courseId)
+    if (!courseId) {
+      return res.status(400).json({
+        message: "courseId is undefined"
+      });
     }
 
-     
-}
+    const average = await RatingsandReviews.aggregate([
+      {
+        $match: {
+          course: new mongoose.Types.ObjectId(courseId)
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          averageRating: { $avg: "$rating" }
+        }
+      }
+    ]);
+
+    if (average.length === 0) {
+      return res.status(200).json({
+        message: "no ratings yet",
+        averageRating: 0
+      });
+    }
+
+    return res.status(200).json({
+      message: "average success",
+      averageRating: average[0].averageRating
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "average error",
+      error: error.message
+    });
+  }
+};
+
 
 
 

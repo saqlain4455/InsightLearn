@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { connectionApi } from "../../services/apiconnector";
-import { Ratings } from "../../services/apis"; // your review API
+import { Ratings } from "../../services/apis"; 
 
 const ReviewPage = () => {
   const location = useLocation();
@@ -17,7 +17,7 @@ const ReviewPage = () => {
 
     try {
       const response = await connectionApi(
-        Ratings.CREATE_REVIEW, // your backend route
+        Ratings.CREATE_REVIEW, 
         "POST",
         null,
         null,
