@@ -47,8 +47,8 @@ const AdditionalDetails = () => {
         null,
         formData
       )
-      console.log(response)
-      if (response?.success) {
+     
+      if (response) {
         alert('Profile picture updated successfully!')
         setProfileImage(null)
       } else {

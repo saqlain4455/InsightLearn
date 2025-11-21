@@ -20,6 +20,7 @@ const CreateCourse = () => {
   const [categories, setCategories] = useState([]);
   const [previewUrl, setPreviewUrl] = useState(null);
   const navigate = useNavigate();
+  const [loading,setLoading] = useState(false)
 
   const handleInput = (e) => {
     const { name, value, files } = e.target;
@@ -56,9 +57,11 @@ const CreateCourse = () => {
         fd.append("thumbnail", formData.thumbnail);
       }
       console.log(fd);
+      setLoading(true)
       const res = await connectionApi(Course.CREATE_COURSE, "POST", {}, null, fd);
       console.log(res);
       if (res) {
+        setLoading(false)
         console.log("course created successfully", res);
         navigate("/section");
       }
@@ -265,7 +268,7 @@ const CreateCourse = () => {
           <div className="flex justify-center pt-4">
             <div onClick={clicked}>
               <Button active={true}>
-                Create Course
+                 {loading? "loading...": "Create Course"}
               </Button>
             </div>
           </div>

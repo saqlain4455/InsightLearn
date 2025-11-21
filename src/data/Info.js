@@ -46,7 +46,7 @@ export const info = [
     ],
   },
   {
-    tag: "beginner",
+    tag: "beginner as Dev",
     courses: [
       {
         heading: "React Basics",
@@ -98,4 +98,6 @@ export const navLinks = [
   { name: "Catalog", link: "/catalog" },
   { name: "About Us", link: "/about" },
   { name: "Contact Us", link: "/contact" },
+  {name:"DashBoard",link:"/dashboard"},
+  {name:"Create a course",link:"/coursecreate"}
 ];

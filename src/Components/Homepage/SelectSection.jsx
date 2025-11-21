@@ -6,52 +6,54 @@ import Cards from './Cards.jsx'
   const titles=[
     "free",
     "new to code",
-    "beginner",
-    "intermediate"
-    
+    "beginner as Dev",
+    "intermediate" 
 ]
 
 const SelectSection = () => {
-    const [tag,setTag] = useState(titles[0])
-const [courses,setCourses] = useState(info[0].courses)
-const [currentCourse,setCurrentCourse] = useState(info[0].courses[0].heading)
+  const [tag, setTag] = useState(titles[0]);
+  const [courses, setCourses] = useState(info[0].courses);
+  const [currentCourse, setCurrentCourse] = useState(info[0].courses[0].heading);
 
-const setUpCourse =(value)=>{
-    setTag(value)
-    const result =(info.filter((item)=> item.tag===value))
-    setCourses(result[0].courses)
-    setCurrentCourse(result[0].courses[0].heading)
+  const setUpCourse = (value) => {
+    setTag(value);
+    const result = info.filter((item) => item.tag === value);
+    setCourses(result[0].courses);
+    setCurrentCourse(result[0].courses[0].heading);
+  };
 
-}
   return (
-    <div >
-        <div className='flex flex-row  w-full justify-center   ' >
-
-       
-     {
-        titles.map((item,index)=>{
+    <div className=' bg-gradient-to-b from-slate-950 to-slate-900  '>
+      <div className='max-w-7xl mx-auto'>
+        {/* Tab Navigation */}
+        <div className='flex flex-wrap justify-center gap-3 mb-12 px-4'>
+          {titles.map((item, index) => {
+            const isActive = tag === item;
             return (
-                <div className={`bg-${tag===item ? "sky-500":"gray-200"}  flex flex-row justify-center text-white px-3 py-3  cursor-pointer lg:w-[150px]  `}
-                onClick={()=>setUpCourse(item)}
-                key={index}>
-                    {item}
+              <button
+                key={index}
+                onClick={() => setUpCourse(item)}
+                className={`
+                  px-6 py-3 rounded-lg font-semibold capitalize
+                  transition-all duration-300 transform
+                  ${isActive
+                    ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/50 scale-105'
+                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600 hover:scale-105'
+                  }
+                  min-w-[140px] text-center
+                `}
+              >
+                {item}
+              </button>
+            );
+          })}
+        </div>
 
-                </div>
-            )
-        })
-     }
-
-    
-     </div>
-       <div className='lg:h-[70px]'></div>
-      <div className='w-full ' >
-         <Cards 
-         coursees={courses}
-         currentCourse={currentCourse}
-         />
-     </div>
+        {/* Course Cards */}
+        <Cards coursees={courses} currentCourse={currentCourse} />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default SelectSection
+export default SelectSection;

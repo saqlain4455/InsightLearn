@@ -6,28 +6,29 @@ import { SlBadge } from "react-icons/sl";
 import { FaFileCode } from "react-icons/fa";
 import image4 from "../../assets/frame.png"
 
-const data =[{
-    model:<HiAcademicCap />,
-    Heading:"Leadership",
-    Description:"Learn from industry experts who are passionate about teaching and mentoring "
+const data = [
+  {
+    model: <HiAcademicCap />,
+    Heading: "Leadership",
+    Description: "Develop strong decision-making and guide teams with confidence."
+  },
+  {
+    model: <IoDiamondOutline />,
+    Heading: "Innovation",
+    Description: "Explore creative ideas and build solutions that stand out."
+  },
+  {
+    model: <SlBadge />,
+    Heading: "Excellence",
+    Description: "Achieve high standards through dedication and consistent growth."
+  },
+  {
+    model: <FaFileCode />,
+    Heading: "Technical Skills",
+    Description: "Gain hands-on coding experience with real-world projects."
+  },
+];
 
-},{
-    model:<IoDiamondOutline />,
-    Heading:"Leadership",
-    Description:"Learn from industry experts who are passionate about teaching and mentoring "
-
-},{
-    model:<SlBadge />,
-    Heading:"Leadership",
-    Description:"Learn from industry experts who are passionate about teaching and mentoring "
-
-},{
-    model:<FaFileCode />,
-    Heading:"Leadership",
-    Description:"Learn from industry experts who are passionate about teaching and mentoring "
-
-},
-]
 
 const TimeLine = () => {
   return (

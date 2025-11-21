@@ -18,6 +18,7 @@ export  const Course ={
     GETFULL_COURSEDETAILS:BASE_URL+"/course/FullCourseDetails",
     PAYMENT_ID:BASE_URL+"/course/payment",
     DELETE_COURSE:BASE_URL+"/course/deleteCourse",
+    GET_ALL_COURSE:BASE_URL+"/course/getAllCourse"
     
 }
 export const section ={

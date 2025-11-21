@@ -5,73 +5,83 @@ import Category from "../models/Categorym.js"
 import { imageUploadToCloudinary } from "../utils/mediaUploader.js"
 import Categorym from "../models/Categorym.js"
 import RatingsandReviews from "../models/RatingsandReviews.js"
+import SubSections from "../models/SubSections.js"
+import Section from "../models/Section.js"
+ export const createCourse = async (req, res) => {
+    try {
+        const { courseName, courseDescription, whatYouWillLearn, price, tag, category } = req.body;
+        const thumbnail = req.files?.thumbnail;
 
- export const createCourse= async (req,res)=>{
-    try{
-        const {courseName,courseDescription,whatYouWillLearn,price,tag,category} =req.body
-         const thumbnail=req.files.thumbnail
-    
-        if(!courseName||!courseDescription||!whatYouWillLearn||!price||!tag||!thumbnail){
-            res.status(404).json({
-                message:"you have to enter evreydetail here"
-            })
-        }
-        const info=req.user.id
-        const userDetails= await User.findOne({_id:info})
-        if(!userDetails){
-            return  res.status(404).json({
-                message:"user not found "
-            })
+        if (!courseName || !courseDescription || !whatYouWillLearn || !price || !tag || !thumbnail) {
+            return res.status(404).json({
+                message: "You have to enter every detail here"
+            });
         }
 
-        const verify= await Category.findOne({_id:category})
-        if(!verify){
-             return res.status(404).json({
-                message:"undefined category"
-
-            })
-        }
-        
-        const thumbnailDetails= await imageUploadToCloudinary(process.env.FOLDER_NAME,thumbnail)
        
-        const contentDetails=await Course.create({
+        const maxSize = 2 * 1024 * 1024;
+        if (thumbnail.size > maxSize) {
+            return res.status(400).json({
+                message: "Thumbnail should not be more than 2 MB"
+            });
+        }
+
+        const userId = req.user.id;
+        const userDetails = await User.findOne({ _id: userId });
+        if (!userDetails) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        const categoryDetails = await Category.findOne({ _id: category });
+        if (!categoryDetails) {
+            return res.status(404).json({
+                message: "Undefined category"
+            });
+        }
+
+       
+        const thumbnailDetails = await imageUploadToCloudinary(process.env.FOLDER_NAME, thumbnail);
+
+       
+        const course = await Course.create({
             courseName,
             courseDescription,
-            instructor:userDetails._id,
-            whatYouWillLearn:whatYouWillLearn,
+            instructor: userDetails._id,
+            whatYouWillLearn,
             price,
-            tag:tag,
-            Category:category,
-            thumbnail:thumbnailDetails.secure_url
+            tag,
+            Category: category,
+            thumbnail: thumbnailDetails.secure_url
+        });
 
-        })
-           
-        const updateUser= await User.findByIdAndUpdate(
-            {_id:userDetails._id},
-            {$push:{courses:contentDetails._id}},
-            {new:true}
-        )
+       
+        await User.findByIdAndUpdate(
+            userDetails._id,
+            { $push: { courses: course._id } },
+            { new: true }
+        );
 
-        const updatedTag = await Category.findByIdAndUpdate(
-            {_id:category},
-            {$push:{course:contentDetails._id}},
-            {new:true}
-        
-        )
+        // Update category with new course
+        await Category.findByIdAndUpdate(
+            category,
+            { $push: { course: course._id } },
+            { new: true }
+        );
 
+        return res.status(200).json({
+            message: "Course created successfully",
+            course
+        });
 
-        return res.json({
-            message:"course created successfully",
-             course:contentDetails
-        })
-
-    }catch(error){
-            return res.status(500).json({
-                message :"eror occured ",
-                error:error.message
-            })
+    } catch (error) {
+        return res.status(500).json({
+            message: "Error occurred",
+            error: error.message
+        });
     }
-}
+};
 
 
 export const  getAllCourse = async(req,res)=>{
@@ -80,13 +90,15 @@ export const  getAllCourse = async(req,res)=>{
                                             price:true,
                                             ratingaAndReviews:true,
                                             instructor:true,
+                                            thumbnail:true,
+                                            courseDescription:true,
                                             studentsEnrolled:true,})
                                             .populate("instructor")
                                             .exec()
         
 
     
-        res.status(200).json({
+         return res.status(200).json({
             message:"success",
             data:getAllDetails
         })
@@ -235,50 +247,64 @@ const {courseId,courseName,courseDescription,whatYouWillLearn,price,tag,category
 }
 
 
-export const DeleteCourse = async (req,res)=>{
-    try{
+export const DeleteCourse = async (req, res) => {
+  try {
+    const { courseId } = req.body;
+    const userId = req.user.id;
 
-   
-    const {courseId} =req.body
-    console.log(courseId)
-    const userId =req.user.id
-    console.log(userId)
-    console.log(userId)
-    if(!courseId||!userId){
-        return res.status(400).json({
-            message:"data undefined"
-        })
+    if (!courseId || !userId) {
+      return res.status(400).json({
+        message: "data undefined"
+      });
     }
 
-    const checkId= await Course.findOne({_id:courseId})
-    if(!checkId){
-        return res.status(400).json({
-            message:"invalid Id"
-        })
+    // Find the course
+    const checkId = await Course.findById(courseId).populate("courseContent");
+    if (!checkId) {
+      return res.status(400).json({
+        message: "invalid Id"
+      });
     }
-    
-    const categoryId= checkId.Category
-    console.log(checkId)
-    const deletedId = await Course.findByIdAndDelete({_id:courseId})
 
-    const update = await User.findByIdAndUpdate({_id:userId},
-                                                {$pull:{courses:courseId}}
-    )
-    const category = await Category.findByIdAndUpdate({_id:categoryId},
-                                                    {$pull:{course:courseId}}
-    )
-    console.log(category)
-    return  res.status(200).json({
-        message:"Deleted successfully",
-        data:deletedId
-    })
-     }catch(error){
-        return res.status(500).json({
-            message:"somthing went wrong while deleting course",
-            error:error.message
-        })
-     }
-}
+    // -------- DELETE SUBSECTIONS --------
+    for (const section of checkId.courseContent) {
+      if (section.subSection && section.subSection.length > 0) {
+        await SubSections.deleteMany({ _id: { $in: section.subSection } });
+      }
+    }
+
+    // -------- DELETE SECTIONS --------
+    await Section.deleteMany({
+      _id: { $in: checkId.courseContent.map((sec) => sec._id) }
+    });
+
+    // -------- DELETE COURSE --------
+    const deletedCourse = await Course.findByIdAndDelete(courseId);
+
+    // -------- REMOVE FROM USER --------
+    await User.findByIdAndUpdate(
+      userId,
+      { $pull: { courses: courseId } }
+    );
+
+    // -------- REMOVE FROM CATEGORY --------
+    await Category.findByIdAndUpdate(
+      checkId.Category,
+      { $pull: { course: courseId } }
+    );
+
+    return res.status(200).json({
+      message: "Course, sections, and subsections deleted successfully",
+      data: deletedCourse
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "something went wrong while deleting course",
+      error: error.message
+    });
+  }
+};
 
 
 

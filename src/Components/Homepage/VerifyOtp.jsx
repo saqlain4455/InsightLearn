@@ -23,9 +23,7 @@ const VerifyOtp = () => {
 };
 
 
-    useEffect(()=>{
-        clicked()
-    },[])
+   
   return (
     <div className='w-full   flex flex-col justify-center  '>
     <div className='w-11/12 mx-auto max-w-[1020px] flex flex-col  font-bold text-white  h-[500px] items-center justify-center gap-5 text-xl'>

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { connectionApi } from "../../services/apiconnector.js";
 import { contact } from "../../services/apis.js";
-
+import toast from "react-hot-toast";
+import Footer from "../Common/Footer.jsx";
 const ContactForm = () => {
   const [form, setForm] = useState({
     name: "",
@@ -27,8 +28,6 @@ const ContactForm = () => {
     
     if (!form.email.trim()) {
       newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
-      newErrors.email = "Please enter a valid email";
     }
     
     if (!form.message.trim()) {
@@ -60,35 +59,14 @@ const ContactForm = () => {
 
       console.log(res.data);
       
-      const notification = document.createElement('div');
-      notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 animate-slide-in';
-      notification.innerHTML = `
-        <div class="flex items-center gap-3">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <span class="font-semibold">Message sent successfully!</span>
-        </div>
-      `;
-      document.body.appendChild(notification);
-      setTimeout(() => notification.remove(), 3000);
+      if(res){
+        toast.success("Sent successfully")
+      }
       
       setForm({ name: "", email: "", message: "" });
     } catch (error) {
       console.log(error);
       
-      const notification = document.createElement('div');
-      notification.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 animate-slide-in';
-      notification.innerHTML = `
-        <div class="flex items-center gap-3">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-          <span class="font-semibold">Failed to send message</span>
-        </div>
-      `;
-      document.body.appendChild(notification);
-      setTimeout(() => notification.remove(), 3000);
     } finally {
       setLoading(false);
     }
@@ -274,21 +252,6 @@ const ContactForm = () => {
         </div>
       </div>
 
-      <style>{`
-        @keyframes slide-in {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        .animate-slide-in {
-          animation: slide-in 0.3s ease-out;
-        }
-      `}</style>
     </div>
   );
 };

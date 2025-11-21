@@ -202,7 +202,7 @@ const Section2 = () => {
           {/* Submit Button */}
           <div className="flex justify-center pt-4">
             <div onClick={createSection2}>
-              <Button active={true}>
+              <Button active={true} linkto={"/dashboard"}>
                 <div className="flex items-center gap-2">
                   <CheckCircle size={18} />
                   Create Subsection

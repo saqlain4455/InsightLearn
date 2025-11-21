@@ -16,6 +16,7 @@ const Section = () => {
   const courseId = token.user.courses[token.user.courses.length - 1];
   console.log(courseId);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     fetchCourseSections();

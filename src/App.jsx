@@ -21,6 +21,8 @@ import ReviewPage from './Components/Homepage/ReviewPage.jsx'
 import ContactForm from './Components/Homepage/Contact.jsx'
 import Cart from './Components/Homepage/Cart.jsx'
 import AdditionalDetails from './Components/Homepage/AdditionalDetails.jsx'
+import Catalog from './Components/Homepage/Catalog.jsx'
+import AboutUs from './Components/Homepage/AboutUs.jsx'
 function App() {
   
 
@@ -45,6 +47,8 @@ function App() {
       <Route  path="/contact" element={<ContactForm />}/>
       <Route path='/cart' element={<Cart />} />
       <Route path='/additionaldetails' element={<AdditionalDetails />} />
+      <Route path='/catalog' element={<Catalog />} />
+      <Route path='/about' element={<AboutUs />} />
       </Routes>
     </div>
   )

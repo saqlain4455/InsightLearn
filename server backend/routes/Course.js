@@ -9,8 +9,8 @@ import { createCategory,showCategory,getCategoryDetails} from "../controllers/Ca
 
 const Router =express.Router()
 Router.post("/createcourse",auth,isInstructor ,createCourse)
-Router.get("/getAllCourse", auth,getAllCourse)
-Router.post("/FullCourseDetails", auth,FullCourseDetails)
+Router.get("/getAllCourse",getAllCourse)
+Router.post("/FullCourseDetails",FullCourseDetails)
 Router.post("/CourseDetails",auth,CourseDetails)
 Router.put("/updateCourse",auth,isInstructor,updateCourse)
 Router.delete("/deleteCourse",auth,isInstructor,DeleteCourse)

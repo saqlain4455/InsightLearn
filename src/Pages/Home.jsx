@@ -9,6 +9,7 @@ import Instructor from "../Components/Homepage/Instructor.jsx";
 import SelectSection from "../Components/Homepage/SelectSection.jsx";
 import Cards from "../Components/Homepage/Cards.jsx";
 import { HiHome } from "react-icons/hi2";
+import Footer from "../Components/Common/Footer.jsx";
 
 function Home() {
   return (
@@ -142,7 +143,7 @@ hello();
             }}
             cta2={{
               active: false,
-              linkto: "/login",
+              linkto: "/catalog",
               text: "View Courses",
             }}
             codeblock={`<!doctype html>
@@ -160,8 +161,8 @@ hello();
         </div>
       </div>
 
-      <div className="w-11/12 mx-auto max-w-7xl mt-24">
-        <div className="flex flex-col items-center justify-between text-white gap-6">
+      <div className="w-11/12 mx-auto max-w-7xl mt-24 ">
+        <div className="flex flex-col items-center justify-between i text-white gap-9">
           <h1 className="font-bold text-3xl md:text-4xl text-center">
             Unlock The{" "}
             <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
@@ -171,8 +172,9 @@ hello();
           <p className="mb-8 text-slate-400 max-w-3xl text-center">
             Dive into our extensive library of coding resources, from beginner tutorials to advanced projects, and start your journey towards mastering programming today.
           </p>
+          <SelectSection />
         </div>
-        <SelectSection />
+        
       </div>
 
       {/* Footer CTA Section */}
@@ -186,8 +188,8 @@ hello();
               </div>
             </CTAButton>
 
-            <CTAButton active={false} linkto={"/login"}>
-              Explore More
+            <CTAButton active={false} linkto={"/catalog"}>
+             Check courses
             </CTAButton>
           </div>
         </div>
@@ -220,6 +222,7 @@ hello();
       </div>
 
       <Instructor />
+      <Footer />
     </div>
   );
 }

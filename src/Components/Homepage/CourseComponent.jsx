@@ -13,7 +13,17 @@ const CourseComponent = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState({});
   
-  const { token } = useSelector((state) => state.auth);
+  const  token  = useSelector((state) => state?.auth?.token?.token)||null;
+  console.log(token)
+  let accountType
+  if(token!==null){
+      const {user} =useSelector((state) => state.auth.token||null)
+  console.log(user)
+   accountType = user.accountType
+  console.log(accountType)
+  console.log(token)
+  }
+
   const { cartItem } = useSelector((state) => state.cart);
   const userId = token?.user?._id;
   console.log(userId)
@@ -254,6 +264,8 @@ const CourseComponent = () => {
                   </div>
 
                   {/* Action Buttons */}
+                  {
+                    accountType==="Student"&&(
                   <div className="flex gap-2">
                     <button
                       className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-bold py-3 rounded-xl hover:from-yellow-400 hover:to-yellow-300 transition-all shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
@@ -307,6 +319,9 @@ const CourseComponent = () => {
                       </button>
                     )}
                   </div>
+                    )
+                  }
+             
 
                  
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { 
   Star, 
@@ -16,8 +16,11 @@ const DashboardCourse = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [activeVideo, setActiveVideo] = useState(null);  
+  console.log(activeVideo)
   const data = location.state.details;
   const courseId = data._id;
+  console.log(data)
 
   function handleReviewClick() {
     navigate("/review", {
@@ -28,9 +31,6 @@ const DashboardCourse = () => {
     });
   }
 
-
-
-  // Calculate total lessons
   const totalLessons = data.courseContent?.reduce(
     (acc, section) => acc + (section.subSection?.length || 0), 
     0
@@ -185,13 +185,6 @@ const DashboardCourse = () => {
             </div>
           </div>
 
-          {data.courseContent?.length === 0 && (
-            <div className="text-center py-8">
-              <BookOpen className="mx-auto text-slate-600 mb-3" size={48} />
-              <p className="text-slate-400">No sections added yet.</p>
-            </div>
-          )}
-
           <div className="flex flex-col gap-4">
             {data.courseContent?.map((section, idx) => (
               <div
@@ -199,11 +192,11 @@ const DashboardCourse = () => {
                 className="bg-slate-900/50 rounded-xl border border-slate-700 
                            hover:border-sky-500/50 transition-all duration-300 overflow-hidden"
               >
+                
                 {/* Section Header */}
                 <div className="bg-slate-800/50 p-6 border-b border-slate-700">
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-sky-500/20 flex items-center justify-center 
-                                    flex-shrink-0 mt-1">
+                    <div className="w-8 h-8 rounded-lg bg-sky-500/20 flex items-center justify-center">
                       <span className="text-sky-400 font-bold text-sm">{idx + 1}</span>
                     </div>
                     <div className="flex-1">
@@ -211,48 +204,67 @@ const DashboardCourse = () => {
                         {section.sectionName}
                       </h3>
                       <p className="text-sm text-slate-400">
-                        {section.subSection?.length || 0} lesson{section.subSection?.length !== 1 ? 's' : ''}
+                        {section.subSection?.length || 0} lesson
+                        {section.subSection?.length !== 1 ? "s" : ""}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Subsections */}
-                <div className="p-4">
+                {/* SUBSECTIONS + VIDEO PLAYER */}
+                <div className="p-4 space-y-3">
+                  
                   {section.subSection?.length > 0 ? (
-                    <div className="space-y-2">
-                      {section.subSection.map((sub, subIdx) => (
-                        <div
-                          key={sub._id}
-                          className="flex items-center gap-3 p-3 bg-slate-800/30 rounded-lg 
-                                     hover:bg-slate-800/50 transition-colors duration-200 group"
-                        >
-                          <div className="w-6 h-6 rounded bg-green-500/20 flex items-center 
-                                          justify-center flex-shrink-0">
-                            <PlayCircle className="text-green-400 group-hover:text-green-300" size={14} />
+                    <>
+                      <div className="space-y-2">
+                        {section.subSection.map((sub) => (
+                          <div key={sub._id}>
+                            <div
+                              onClick={() => setActiveVideo(sub.vedioFile)}
+                              className="flex items-center gap-3 p-3 bg-slate-800/30 rounded-lg 
+                                         hover:bg-slate-800/50 transition-colors duration-200 
+                                         group cursor-pointer"
+                            >
+                              <div className="w-6 h-6 rounded bg-green-500/20 flex items-center justify-center">
+                                <PlayCircle className="text-green-400 group-hover:text-green-300" size={14} />
+                              </div>
+
+                              <span className="text-slate-300 flex-1">{sub.title}</span>
+
+                              {sub.timeDuration && (
+                                <span className="text-xs text-slate-500 flex items-center gap-1">
+                                  <Clock size={12} />
+                                  {sub.timeDuration}
+                                </span>
+                              )}
+                            </div>
                           </div>
-                          <span className="text-slate-300 flex-1">{sub.title}</span>
-                          {sub.timeDuration && (
-                            <span className="text-xs text-slate-500 flex items-center gap-1">
-                              <Clock size={12} />
-                              {sub.timeDuration}
-                            </span>
-                          )}
+                        ))}
+                      </div>
+
+                      {activeVideo && (
+                        <div className="mt-4">
+                          <video
+                            className="w-full rounded-lg border border-slate-700"
+                            controls
+                            src={activeVideo}
+                          />
                         </div>
-                      ))}
-                    </div>
+                      )}
+                    </>
                   ) : (
                     <p className="text-slate-500 text-center py-4 italic">
                       No lessons available in this section
                     </p>
                   )}
                 </div>
+
               </div>
             ))}
           </div>
         </div>
 
-        {/* Progress Indicator (if available) */}
+        {/* Students */}
         {data.studentsEnrolled && (
           <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 backdrop-blur 
                           rounded-xl p-6 border border-green-500/30">
@@ -271,6 +283,7 @@ const DashboardCourse = () => {
             </div>
           </div>
         )}
+
       </div>
     </div>
   );
