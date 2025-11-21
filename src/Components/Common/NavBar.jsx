@@ -82,7 +82,7 @@ const NavBar = () => {
   return (
     <div className="w-full bg-transparent border-b">
       {/* NAVBAR MAIN */}
-      <div className="max-w-maxContent w-full mx-auto flex justify-between items-center px-4 py-3 text-white">
+      <div className="max-w-maxContent w-full mx-auto flex justify-between md:justify-evenly items-center px-4 py-3 text-white">
 
       
         <Link to="/">

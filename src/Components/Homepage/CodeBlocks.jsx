@@ -1,33 +1,34 @@
 import React from 'react'
 import CTAButton from "./Button.jsx"
 import { TiArrowRightThick } from "react-icons/ti";
-import {TypeAnimation} from "react-type-animation"
+import { TypeAnimation } from "react-type-animation";
 
 const CodeBlocks = ({
-    heading,
-    subHeading,
-    postion,
-    cta1,
-    cta2,
-    codeblock,
-    codecolor
+  heading,
+  subHeading,
+  cta1,
+  cta2,
+  codeblock,
+  codecolor,
+  reverse = false,
 }) => {
+
+  const layoutClass = reverse ? "md:flex-row-reverse" : "md:flex-row";
+
   return (
     <div
-      className={`flex flex-col md:flex-${postion} my-20 
-                  justify-between w-full md:w-[900px] gap-6 h-fit`}
+      className={`flex flex-col ${layoutClass} my-20 
+        justify-between w-full md:w-[900px] gap-6 h-fit`}
     >
 
       {/* LEFT SECTION */}
       <div className="flex flex-col justify-evenly w-full md:w-1/2">
         {heading}
 
-        <div className="mt-3">
-          {subHeading}
-        </div>
+        <div className="mt-3">{subHeading}</div>
 
         <div className="flex flex-row px-3 py-2 gap-3 justify-center">
-          <CTAButton active={cta1.active} linkto={cta1.linkto} >
+          <CTAButton active={cta1.active} linkto={cta1.linkto}>
             <div className='flex flex-row gap-2 items-center'>
               {cta1.text}
               <TiArrowRightThick />
@@ -50,14 +51,14 @@ const CodeBlocks = ({
           ))}
         </div>
 
-        {/* Code animation block */}
+        {/* Code animation */}
         <div className={`flex flex-col ${codecolor} w-[85%] font-mono text-sm sm:text-base`}>
           <TypeAnimation
             sequence={[codeblock, 500, " "]}
             repeat={Infinity}
             style={{
               whiteSpace: "pre-line",
-              display: "block"
+              display: "block",
             }}
             omitDeletionAnimation={true}
           />
@@ -65,7 +66,8 @@ const CodeBlocks = ({
       </div>
 
     </div>
-  )
-}
+  );
+};
 
-export default CodeBlocks
+export default CodeBlocks;
+

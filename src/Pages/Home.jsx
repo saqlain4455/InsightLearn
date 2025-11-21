@@ -70,22 +70,24 @@ function Home() {
         </div>
 
         {/* Section 1 */}
-        <div className="mt-20 w-full flex flex-col items-center justify-center">
-          <CodeBlocks
-            heading={
-              <div className="text-2xl md:text-3xl font-bold text-center">
-                Unlock Your{" "}
-                <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
-                  Coding Potential
-                </span>{" "}
-                with Our Online Courses
-              </div>
-            }
-            subHeading={"Our courses are designed and taught by industry experts to ensure you get the best learning experience."}
-            postion={"lg:row"}
-            cta1={{ active: true, linkto: "/signup", text: "Try It Yourself" }}
-            cta2={{ active: false, linkto: "/login", text: "Learn More" }}
-            codeblock={`<!doctype html>
+        <div className="mt-20 w-full flex flex-col items-center justify-center ">
+         <CodeBlocks
+  reverse={false}
+  heading={
+    <div className="text-2xl md:text-3xl font-bold text-center">
+      Unlock Your{" "}
+      <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+        Coding Potential
+      </span>{" "}
+      with Our Online Courses
+    </div>
+  }
+  subHeading={
+    "Our courses are designed and taught by industry experts to ensure you get the best learning experience."
+  }
+  cta1={{ active: true, linkto: "/signup", text: "Try It Yourself" }}
+  cta2={{ active: false, linkto: "/login", text: "Learn More" }}
+  codeblock={`<!doctype html>
 <html>
 <head><title>Hello</title></head>
 <body>
@@ -95,26 +97,29 @@ hello();
 </script>
 </body>
 </html>`}
-            codecolor={"text-yellow-300"}
-          />
+  codecolor={"text-yellow-300"}
+/>
+
         </div>
 
         {/* Section 2 */}
         <div className="mt-20 w-full flex flex-col items-center justify-center">
-          <CodeBlocks
-            heading={
-              <div className="text-2xl md:text-3xl font-bold text-center">
-                Start Your Journey{" "}
-                <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
-                  From Beginner to Pro
-                </span>
-              </div>
-            }
-            subHeading={"Master the fundamentals and advance to complex projects with our structured learning path."}
-            postion={"row-reverse"}
-            cta1={{ active: true, linkto: "/signup", text: "Get Started" }}
-            cta2={{ active: false, linkto: "/catalog", text: "View Courses" }}
-            codeblock={`<!doctype html>
+         <CodeBlocks
+  reverse={true}
+  heading={
+    <div className="text-2xl md:text-3xl font-bold text-center">
+      Start Your Journey{" "}
+      <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+        From Beginner to Pro
+      </span>
+    </div>
+  }
+  subHeading={
+    "Master the fundamentals and advance to complex projects with our structured learning path."
+  }
+  cta1={{ active: true, linkto: "/signup", text: "Get Started" }}
+  cta2={{ active: false, linkto: "/catalog", text: "View Courses" }}
+  codeblock={`<!doctype html>
 <html>
 <head><title>Hello</title></head>
 <body>
@@ -124,8 +129,9 @@ hello();
 </script>
 </body>
 </html>`}
-            codecolor={"text-yellow-300"}
-          />
+  codecolor={"text-yellow-300"}
+/>
+
         </div>
       </div>
 

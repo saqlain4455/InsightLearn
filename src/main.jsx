@@ -5,6 +5,7 @@ import App from './App.jsx'
 import {Provider} from "react-redux"
 import rootReducer from './Reducer/index.js'
 import { configureStore } from "@reduxjs/toolkit";
+import './index.css'
 const store =configureStore({
   reducer:rootReducer,
 })
