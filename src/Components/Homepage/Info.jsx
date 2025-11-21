@@ -10,7 +10,7 @@ import { RxEyeOpen } from "react-icons/rx";
 import { GoEyeClosed } from "react-icons/go";
 
 const Info = () => {
-  const [userType, setUserType] = useState("Student");
+  const [userType, setUserType] = useState("");
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -88,7 +88,7 @@ const Info = () => {
             name="email"
           />
 
-          {/* PASSWORD */}
+          
           <div className="relative w-full">
             <input
               type={showPass ? "text" : "password"}

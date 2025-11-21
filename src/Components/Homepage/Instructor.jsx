@@ -8,7 +8,7 @@ const Instructor = () => {
     <div>
       <div className=' w-11/12 flex flex-row mx-auto max-w-maxContent  justify-evenly  mt-20 '>
 
-    <div className='w-[40%] '>
+    <div className='w-[40%]  flex flex-row items-center '>
     <img  className='w-[300px]'   src={image} />
     </div>
 

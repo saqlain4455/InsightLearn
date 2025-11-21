@@ -22,7 +22,7 @@ const LearningLanguage = () => {
     </div>
 
     <div>
-    <CTAButton  active={true} liinkto={"/signup"}>
+    <CTAButton  active={true} linkto={"/signup"}>
           Learn more  
         </CTAButton>
     </div>

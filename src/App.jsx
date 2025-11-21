@@ -27,10 +27,10 @@ function App() {
   
 
   return (
-    <div className='flex flex-col w-screen min-h-screen font-inter bg-slate-950'>
+    <div className='flex flex-col w-full min-h-screen font-inter bg-slate-950'>
       <Toaster />
       <NavBar />
-      <Routes className="w-full ">
+      <Routes >
         <Route path='/' element={ <Home />} />
         <Route path="/Login" element={<Login />}/>
         <Route path='/signup' element={<Info />} />
