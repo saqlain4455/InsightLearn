@@ -129,7 +129,7 @@ const AdditionalDetails = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       {/* Profile Picture Section */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-slate rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">Profile Picture</h2>
         
         <div className="flex flex-col items-center space-y-4">
