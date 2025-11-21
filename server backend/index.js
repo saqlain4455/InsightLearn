@@ -18,15 +18,18 @@ databaseConnected()
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin:"http://localhost:5173",
-    credentials:true
-}))
+    origin: ["http://localhost:5173", "https://insightlearn-1.onrender.com"], 
+    credentials: true
+}));
+
 
 app.use(fileUpload({
   useTempFiles: true,
   tempFileDir: "/tmp/"
 }));
-
+app.get('/healthz', (req, res) => {
+  res.status(200).send('OK');
+});
 connectCloudinary()
 
 app.use("/api/v1/course",getCourseRoutes)
