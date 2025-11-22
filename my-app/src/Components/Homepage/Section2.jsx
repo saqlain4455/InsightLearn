@@ -171,7 +171,7 @@ const Section2 = () => {
                         Click to upload video
                       </p>
                       <p className="text-xs text-slate-500 mt-1">
-                        MP4, MOV, AVI up to 500MB
+                        MP4, MOV, AVI up to 5MB
                       </p>
                     </>
                   )}
