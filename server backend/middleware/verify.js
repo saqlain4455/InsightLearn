@@ -2,31 +2,24 @@ import jwt from "jsonwebtoken";
 
 export const auth = async (req, res, next) => {
   try {
-    // Get token from cookie or Authorization header
-    const token = req.cookies?.token.token || req.header("Authorization")?.replace("Bearer ", "");
-    console.log(token)
+    // Correct way: cookie contains the token directly
+    const token =
+      req.cookies?.token ||
+      req.header("Authorization")?.replace("Bearer ", "");
+
+    console.log("Token from cookie:", token);
+
     if (!token) {
-      return res.status(401).json({
-        message: "No token found",
-      });
+      return res.status(401).json({ message: "No token found" });
     }
 
-    try {
-      // Verify JWT
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // Attach user info to request
-      req.user = decoded;
-      next();
-    } catch (error) {
-      return res.status(401).json({
-        message: "Error verifying token",
-        error: error.message,
-      });
-    }
+    req.user = decoded;
+    next();
   } catch (error) {
-    return res.status(500).json({
-      message: "Auth middleware error",
+    return res.status(401).json({
+      message: "Invalid or expired token",
       error: error.message,
     });
   }
