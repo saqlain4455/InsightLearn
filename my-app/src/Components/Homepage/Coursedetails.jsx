@@ -8,7 +8,7 @@ import CategoryCourseDetails from "./CategoryCourseDetails";
 const Coursedetails = () => {
   const location = useLocation();
   const data = location.state.details;
-  
+  console.log(data)
  return(
   <>
     <CategoryCourseDetails  data={data}/>

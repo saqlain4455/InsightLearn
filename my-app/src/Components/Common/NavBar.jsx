@@ -57,7 +57,8 @@ const NavBar = () => {
 
       const categoryData = req?.data?.data ?? {};
       const coursesData = categoryData?.course ?? [];
-
+      console.log(categoryData)
+      console.log(coursesData)
       navigate("/courseDetails", {
         state: { category: categoryData, courses: coursesData },
       });
