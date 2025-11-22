@@ -36,7 +36,7 @@ const Otp = () => {
           confirmPassword: user.confirmPassword,
           email: user.email,
           accountType: user.accountType,
-          otp: user.otp,
+          
         }
       );
 

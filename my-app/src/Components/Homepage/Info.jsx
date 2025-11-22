@@ -8,7 +8,8 @@ import Button from './Button';
 import toast from 'react-hot-toast';
 import { RxEyeOpen } from "react-icons/rx";
 import { GoEyeClosed } from "react-icons/go";
-
+import { Auth } from '../../services/apis';
+import { connectionApi } from '../../services/apiconnector';
 const Info = () => {
   const [userType, setUserType] = useState("");
   const { user } = useSelector((state) => state.user);
@@ -31,14 +32,31 @@ const Info = () => {
     dispatch(setUser(newValue));
   }
 
-  function clicked() {
-    if (!user.email) {
-      toast.error("Enter the details");
-    } else {
-      navigate("/verifyotp");
-    }
-  }
+   async function clicked() {
+     try {
+      const data = await connectionApi(
+        Auth.SIGN_UP,
+        "POST",
+        null,
+        null,
+        {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          password: user.password,
+          confirmPassword: user.confirmPassword,
+          email: user.email,
+          accountType: user.accountType,
+          
+        }
+      );
+      if(data){
+        navigate("/login")
+      }
 
+  }catch(error){
+      console.log("something went wrong:",error)
+  }
+  }
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">
       <div className="w-11/12 max-w-5xl flex flex-col md:flex-row justify-evenly items-center text-white shadow-lg rounded-lg p-6 gap-6">

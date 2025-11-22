@@ -8,7 +8,7 @@ const initialState = {
     "password":null,
     "confirmPassword":null,
     "accountType":"",
-    "otp":null
+    
   }
 };
 
