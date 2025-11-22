@@ -23,7 +23,7 @@ const Catalog = () => {
    
     const { cartItem } = useSelector((state) => state.cart)
     const userId = token?.user?._id
-
+    console.log(userId)
     useEffect(() => {
         async function getInfoCourses() {
             try {
@@ -75,6 +75,7 @@ const Catalog = () => {
     }
 
     async function addedd(courseId) {
+        console.log(courseId)
         setPaymentLoading({ ...paymentLoading, [courseId]: true })
         try {
           

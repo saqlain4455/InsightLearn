@@ -22,7 +22,7 @@ const otpSchema= mongoose.Schema({
  const emailVerification = async (email,otp)=>{
     try{
          const mailResponse= await sendMailer(email,"verifiying the otp here",otp)
-         console.log("maile verfication done successfully")
+         console.log("mail verfication done successfully")
     }catch(error){
         console.log("error occured while sending the otp",error)
     }

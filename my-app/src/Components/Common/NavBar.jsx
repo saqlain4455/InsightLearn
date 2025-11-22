@@ -17,7 +17,7 @@ const NavBar = () => {
   const token = useSelector((state) => state.auth?.token ?? null);
   const user = token?.user ?? null;
   const cart = useSelector((state) => state.cart.cartItem);
-
+ console.log(token)
   const [subLinks, setSubLinks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);

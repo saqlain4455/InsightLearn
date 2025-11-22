@@ -72,7 +72,7 @@ import Section from "../models/Section.js"
 
         return res.status(200).json({
             message: "Course created successfully",
-            course
+            data:course
         });
 
     } catch (error) {
@@ -339,7 +339,7 @@ export const purchasedPayment = async (req, res) => {
     }
 
     // Add course
-    await User.findByIdAndUpdate(
+     const user3=await User.findByIdAndUpdate(
       userId,
       { $push: { courses: courseId } }
     );
@@ -351,7 +351,8 @@ export const purchasedPayment = async (req, res) => {
 )
 
     return res.status(200).json({
-      message: "Payment added successfully"
+      message: "Payment added successfully",
+      data:user3
     });
 
   } catch (error) {

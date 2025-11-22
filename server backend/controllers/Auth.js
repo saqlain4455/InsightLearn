@@ -143,70 +143,75 @@ import ProfileUser from "../models/Profile.js"
 }
 
 
- export const login = async (req,res)=>{
-    try{
 
-    
-    const {email,password}=req.body
-   
-    if(!email||!password){
-        return  res.status(404).json({
-            message:"email or password undefined "
-        })
-    }
-    
-    const user= await User.findOne({email:email})
-                                .populate("additionalDetails")
-                                
-   
-    if(!user){
-        return  res.status(200).json({
-            message:"email is not signed in "
-        })
-    }
-    
 
-       
-   
-        const validation= await bcrypt.compare(password,user.password)
-       
-        if(validation){
-             
-            const token =jwt.sign({ 
-                id:user._id,
-                email:user.email,
-            name:user.name,
-            accountType:user.accountType  },
-                process.env.JWT_SECRET,
-                
-                {
-                    expiresIn:"2h"
-                }
-            )
-            
-            user.token=token
-            user.password=undefined
-             const Options={
-                expires:new Date(Date.now()+3*24*60*60*1000),
-                
-            }
-         return res.cookie("token",token,Options).status(200).json({
-            token,
-            user,
-            message:"logged in successfully"
-        })
-        }else{
-            return  res.status(500).json({
-                message:"incorrect password "
-            })
-        }
-           
-    }catch(error){
-            return  res.status(500).json({
-                message:error.message
-            })
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email or password is undefined"
+      });
     }
-}
+
+    const user = await User.findOne({ email }).populate("additionalDetails");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "Email is not signed in"
+      });
+    }
+
+    const isValid = await bcrypt.compare(password, user.password);
+
+    if (!isValid) {
+      return res.status(401).json({
+        message: "Incorrect password"
+      });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        accountType: user.accountType
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+
+    // Remove password before sending user object
+    user.password = undefined;
+
+    // Set cookie for cross-origin frontend
+    const cookieOptions = {
+  httpOnly: true,                         // cannot be accessed by JS
+  secure: true,                           // required for HTTPS in production
+  sameSite: "none",                       // cross-origin support
+  expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days
+};
+
+    // Set cookie and send response
+    return res
+      .cookie("token", token, cookieOptions)
+      .status(200)
+      .json({
+        token,
+        user,
+        message: "Logged in successfully"
+      });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
 
 
 

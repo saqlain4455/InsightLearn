@@ -3,8 +3,8 @@ import jwt from "jsonwebtoken";
 export const auth = async (req, res, next) => {
   try {
     // Get token from cookie or Authorization header
-    const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "");
-
+    const token = req.cookies?.token.token || req.header("Authorization")?.replace("Bearer ", "");
+    console.log(token)
     if (!token) {
       return res.status(401).json({
         message: "No token found",

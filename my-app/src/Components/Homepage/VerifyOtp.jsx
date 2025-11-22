@@ -5,7 +5,7 @@ import { Auth } from '../../services/apis.js';
 
 const VerifyOtp = () => {
   const { user } = useSelector((state) => state.user);
-
+  console.log(user.email)
   const clicked = async () => {
     try {
       const getOtp = await connectionApi(

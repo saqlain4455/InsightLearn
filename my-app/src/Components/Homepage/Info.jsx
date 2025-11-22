@@ -12,6 +12,7 @@ import { GoEyeClosed } from "react-icons/go";
 const Info = () => {
   const [userType, setUserType] = useState("");
   const { user } = useSelector((state) => state.user);
+  console.log(user)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

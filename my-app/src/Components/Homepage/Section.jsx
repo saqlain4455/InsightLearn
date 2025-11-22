@@ -9,53 +9,60 @@ import { FolderOpen, Plus, ChevronRight, BookOpen, Layers } from "lucide-react";
 
 const Section = () => {
   const [sectionName, setSectionName] = useState("");
-  
   const [sections, setSections] = useState([]);
-  
-  const { token } = useSelector((state) => state.auth);
-  const courseId = token.user.courses[token.user.courses.length - 1];
- 
+
+  // ✅ Get token and user info at top level
+  const tokenObj = useSelector((state) => state.auth.token);
+  const token = tokenObj?.token; // raw JWT string
+  const courseId = tokenObj?.user?.courses[tokenObj.user.courses.length - 1];
+
   const navigate = useNavigate();
-  
 
   useEffect(() => {
     fetchCourseSections();
   }, []);
 
+  // ✅ Fetch course sections
   async function fetchCourseSections() {
     try {
       const res = await connectionApi(
         Course.GET_DETAILS,
         "POST",
+        { Authorization: `Bearer ${token}` }, // token added
         null,
-        null,
-        { courseId: courseId }
+        { courseId }
       );
-      
       setSections(res.data.data.courseContent);
     } catch (err) {
-      console.log("Error fetching course");
+      console.log("Error fetching course", err.response?.data || err.message);
     }
   }
 
+  // ✅ Create section using token from Redux
   async function createSection() {
     if (!sectionName.trim()) return;
 
     try {
+      if (!token) {
+        console.error("No token found in Redux");
+        return;
+      }
+
       const res = await connectionApi(
         section.CREATE_SECTION,
         "POST",
-        null,
+        { Authorization: `Bearer ${token}` }, // token added
         null,
         { courseId, sectionName }
       );
 
-      const newSection = res.data.data;
+      console.log("Section created successfully:", res.data);
 
+      const newSection = res.data.data;
       setSections((prev) => [...prev, newSection]);
       setSectionName("");
     } catch (err) {
-      console.log("Section create error");
+      console.error("Section create error:", err.response?.data || err.message);
     }
   }
 

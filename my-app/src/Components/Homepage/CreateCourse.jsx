@@ -4,8 +4,11 @@ import { controller, Course } from "../../services/apis";
 import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 import { BookOpen, Upload, DollarSign, Tag, FolderOpen, FileText, Target } from "lucide-react";
-
+import {useSelector} from "react-redux"
 const CreateCourse = () => {
+  const token2 = useSelector(state => state.auth.token);
+  const token=token2.token // this should be the string
+console.log("Token used:", token); 
   const [formData, setFormData] = useState({
     courseName: "",
     courseDescription: "",
@@ -42,33 +45,44 @@ const CreateCourse = () => {
   };
 
   const clicked = async () => {
-    console.log("CLICKED FUNCTION CALLED");
-    try {
-      const fd = new FormData();
+  console.log("CLICKED FUNCTION CALLED");
+  try {
+    const fd = new FormData();
 
-      fd.append("courseName", formData.courseName);
-      fd.append("courseDescription", formData.courseDescription);
-      fd.append("whatYouWillLearn", formData.whatYouWillLearn);
-      fd.append("price", formData.price);
-      fd.append("tag", formData.tag);
-      fd.append("category", formData.category);
+    fd.append("courseName", formData.courseName);
+    fd.append("courseDescription", formData.courseDescription);
+    fd.append("whatYouWillLearn", formData.whatYouWillLearn);
+    fd.append("price", formData.price);
+    fd.append("tag", formData.tag);
+    fd.append("category", formData.category);
 
-      if (formData.thumbnail) {
-        fd.append("thumbnail", formData.thumbnail);
-      }
-      
-      setLoading(true)
-      const res = await connectionApi(Course.CREATE_COURSE, "POST", {}, null, fd);
-      console.log(res);
-      if (res) {
-        setLoading(false)
-        console.log("course created successfully", res);
-        navigate("/section");
-      }
-    } catch (error) {
-      console.error("Error while creating course:", error.response?.data || error.message);
+    if (formData.thumbnail) {
+      fd.append("thumbnail", formData.thumbnail);
     }
-  };
+
+    setLoading(true);
+
+    // Get token from localStorage (saved on login)
+   
+
+    // Send FormData + Authorization header
+    const res = await connectionApi(
+      Course.CREATE_COURSE,
+      "POST",
+      { Authorization: `Bearer ${token}` }, // <-- token added here
+      null,
+      fd
+    );
+
+    console.log("Course created successfully", res);
+    setLoading(false);
+    navigate("/section");
+  } catch (error) {
+    setLoading(false);
+    console.error("Error while creating course:", error.response?.data || error.message);
+  }
+};
+
 
   const getCategories = async () => {
     try {
