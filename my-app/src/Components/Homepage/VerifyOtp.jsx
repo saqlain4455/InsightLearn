@@ -16,6 +16,9 @@ const VerifyOtp = () => {
         { email: user.email }
       );
       console.log(getOtp);
+      if(getOtp){
+        console.log("otp wentn throught here ")
+      }
     } catch (error) {
       console.log("Error while verification of email", error);
     }

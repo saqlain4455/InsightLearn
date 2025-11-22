@@ -7,140 +7,130 @@ import sendMailer from "../utils/mail.js"
 import bcrypt from "bcrypt";
 import ProfileUser from "../models/Profile.js"
 
- export const sendOtp =  async (req,res)=>{
-    try{
-    const {email}=req.body
-    if(!email){
-        return  res.status(404).json({
-            message:"email is not defined"
-        })
+ export const sendOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(404).json({ message: "email is not defined" });
     }
 
-    const checkEmail= await User.findOne({email})
-    if(checkEmail){
-        return  res.status(400).json({
-            message:"email already  exist " 
-        })
+    const checkEmail = await User.findOne({ email });
+    if (checkEmail) {
+      return res.status(400).json({ message: "email already exist" });
     }
 
-        let otp=otpgenerator.generate(6,{
-            upperCaseAlphabets: false,
-            specialChars: false,
-            lowerCaseAlphabets: false
-        })
+    // Generate OTP
+    let otp = otpgenerator.generate(6, {
+      upperCaseAlphabets: false,
+      specialChars: false,
+      lowerCaseAlphabets: false,
+    });
 
-       
-        
-        const already= await  Otp.findOne({otp})
-        while(already){
-             let otp=otpgenerator(6,{
-            upperCaseAlphabets: false,
-            specialChars: false,
-            lowerCaseAlphabets: false
-        })
-       let already= await  Otp.findOne({otp})}
+    // Check uniqueness correctly
+    let already = await Otp.findOne({ otp });
+    while (already) {
+      otp = otpgenerator.generate(6, {
+        upperCaseAlphabets: false,
+        specialChars: false,
+        lowerCaseAlphabets: false,
+      });
 
-       
-       
-       
-         const createOtp =  await Otp.create({
-            email:email,
-            otp:otp
-         })
-        
-
-         
-         return res.status(200).json({
-            message:"otp generated successfully"
-        })
-
-         
-    }catch(error){
-            return res.status(500).json({
-                message:error.message
-            })
+      already = await Otp.findOne({ otp });
     }
-}
+
+    // Save OTP
+    await Otp.create({
+      email: email,
+      otp: otp,
+    });
+
+    return res.status(200).json({
+      message: "otp generated successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 
 
- export const SignUp= async (req,res)=>{
+ export const SignUp = async (req, res) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      confirmPassword,
+      accountType
+    } = req.body;
 
-    try{
-        const   {
-            firstName,
-            lastName,
-            email,
-            password,
-           confirmPassword,
-            accountType,
-            otp
-        }=req.body
-
-        if(!email||!firstName||!lastName||!password||!otp||!accountType||!confirmPassword){
-                return  res.status(404).json({
-                    message:"given data is not defined "
-                })
-        }
-
-        const already= await User.findOne({email})
-        if(already){
-           return   res.status(400).json({
-                message:"user already exist "
-            })
-        }
-
-
-        if(confirmPassword!==password){
-           return   res.status(400).json({
-                message:"invlaid password check "
-            })
-        }
-
-
-            const latestOtp= await Otp.findOne({email}).sort({ createdAt: -1 }).limit(1);
-            
-            if(latestOtp.length===0){
-               return  res.status(404).json({
-                    message:"otp not found "
-                })
-            }else if(otp!==latestOtp.otp){
-                 return res.status(404).json({
-                    message:"otp expired "
-                })
-            }
-
-            const hashedPassword =  await  bcrypt.hash(password,10)
-            
-            const additionalDetails= await ProfileUser.create({
-                gender:null,
-                dateofBirth:null,
-                about:null,
-                contactNumber:null
-            })
-          
-            const fullInfo= await User.create({
-                firstName:firstName,
-                lastName:lastName,
-                email:email,
-                password:hashedPassword,
-                accountType:accountType,
-                additionalDetails:additionalDetails._id,
-                image:`https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`
-                
-            })
-             return res.status(200).json({
-                message:"user signed up",
-                fullInfo:fullInfo
-            })
-
-    }catch(error){
-        return  res.status(500).json({
-            message:"error occured while signing up",
-            error:error.message
-        })
+    // Validate inputs
+    if (
+      !email ||
+      !firstName ||
+      !lastName ||
+      !password ||
+      !confirmPassword ||
+      !accountType
+    ) {
+      return res.status(400).json({
+        message: "All fields are required"
+      });
     }
-}
+
+    // Check if user already exists
+    const already = await User.findOne({ email });
+    if (already) {
+      return res.status(400).json({
+        message: "User already exists"
+      });
+    }
+
+    // Validate password
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        message: "Passwords do not match"
+      });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create profile first
+    const profile = await ProfileUser.create({
+      gender: null,
+      dateofBirth: null,
+      about: null,
+      contactNumber: null
+    });
+
+    // Create user
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      accountType,
+      additionalDetails: profile._id,
+      image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`
+    });
+
+    return res.status(200).json({
+      message: "User signed up successfully",
+      fullInfo: user
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error occurred while signing up",
+      error: error.message
+    });
+  }
+};
 
 
 
