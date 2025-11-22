@@ -43,8 +43,8 @@ function Home() {
 
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full justify-center">
-          <CTAButton linkto={"/learnmore"} active={true}>Learn More</CTAButton>
-          <CTAButton linkto={"/Demo"} active={false}>Book a Demo</CTAButton>
+          <CTAButton linkto={"/catalog"} active={true}>Learn More</CTAButton>
+          <CTAButton linkto={"/signup"} active={false}>Book a Demo</CTAButton>
         </div>
 
         {/* Hero Image */}
