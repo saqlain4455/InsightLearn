@@ -50,8 +50,8 @@ const NavBar = () => {
       const req = await connectionApi(
         controller.GETDETAILSBYID,
         "POST",
-        null,
-        null,
+        {},
+        {},
         { categoryId: value }
       );
 

@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 
+
 export const auth = async (req, res, next) => {
   try {
     // Correct way: cookie contains the token directly
@@ -24,8 +25,6 @@ export const auth = async (req, res, next) => {
     });
   }
 };
-
-
  
 
 

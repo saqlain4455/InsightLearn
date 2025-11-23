@@ -155,9 +155,9 @@ const DashboardCourse = () => {
               <img
                 src={data.instructor.image}
                 alt={`${data.instructor.firstName} ${data.instructor.lastName}`}
-                className="w-20 h-20 rounded-full border-2 border-purple-500/50 shadow-lg"
+                className="w-9 h-9  rounded-full file: md:w-20  md:h-20  md:rounded-full border-2 border-purple-500/50 shadow-lg"
               />
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-purple-500 rounded-full 
+              <div className="absolute -bottom-2 left-5 md:-bottom-1 md:left-12 w-6 h-6 bg-purple-500 rounded-full 
                               flex items-center justify-center border-2 border-slate-800">
                 <Award size={14} className="text-white" />
               </div>

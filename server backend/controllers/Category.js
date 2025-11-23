@@ -58,7 +58,14 @@ import Course from "../models/Course.js"
     const {categoryId} = req.body
     
     const showCategory = await Category.findById({_id:categoryId})
-                                                .populate("course")
+                                                .populate({
+                                                    path:"course",
+                                                    populate:{
+                                                        path:"instructor",
+                                                        model:"User"
+                                                    }
+                                                })
+                                                
         if(!showCategory){
             return res.status(404).json({
                 message:"category not found "

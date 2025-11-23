@@ -45,16 +45,19 @@ import Section from "../models/Section.js"
         const thumbnailDetails = await imageUploadToCloudinary(process.env.FOLDER_NAME, thumbnail);
 
        
-        const course = await Course.create({
-            courseName,
-            courseDescription,
-            instructor: userDetails._id,
-            whatYouWillLearn,
-            price,
-            tag,
-            Category: category,
-            thumbnail: thumbnailDetails.secure_url
-        });
+       
+
+const course = await Course.create({
+  courseName,
+  courseDescription,
+  instructor: new mongoose.Types.ObjectId(userDetails._id),
+  whatYouWillLearn,
+  price,
+  tag,
+  Category: new mongoose.Types.ObjectId(category),
+  thumbnail: thumbnailDetails.secure_url
+});
+
 
        
         await User.findByIdAndUpdate(

@@ -15,12 +15,16 @@ const PORT = process.env.PORT||4000
 
 
 databaseConnected()
+
+app.use(cors({
+  origin: ["http://localhost:5173", "https://insightlearn-1.onrender.com"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({
-    origin: ["http://localhost:5173", "https://insightlearn-1.onrender.com"], 
-    credentials: true
-}));
+
 
 
 app.use(fileUpload({

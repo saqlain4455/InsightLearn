@@ -30,7 +30,7 @@ Router.post("/createratingandreviews",auth,isStudent,createReviews)
 Router.post("/averageratingandreviews",averageRating)
 Router.get("/getAllReviewsandreviews",getAllReviews)
 /*createCategory*/
-Router.post("/createCategory",auth,isAdmin,createCategory)
+Router.post("/createCategory",createCategory)
 Router.get("/showCategory",showCategory)
 Router.post("/getCategoryDetails",getCategoryDetails)
 

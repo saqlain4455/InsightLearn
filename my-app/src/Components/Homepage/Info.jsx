@@ -33,12 +33,13 @@ const Info = () => {
   }
 
    async function clicked() {
+    console.log("function is clicked ")
      try {
       const data = await connectionApi(
         Auth.SIGN_UP,
         "POST",
-        null,
-        null,
+        {},
+        {},
         {
           firstName: user.firstName,
           lastName: user.lastName,
@@ -49,6 +50,7 @@ const Info = () => {
           
         }
       );
+      console.log(data)
       if(data){
         navigate("/login")
       }
