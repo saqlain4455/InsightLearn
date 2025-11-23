@@ -70,7 +70,7 @@ console.log("Token used:", token);
       Course.CREATE_COURSE,
       "POST",
       { Authorization: `Bearer ${token}` }, // <-- token added here
-      null,
+      {},
       fd
     );
 

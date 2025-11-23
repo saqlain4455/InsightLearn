@@ -1,4 +1,4 @@
-
+import mongoose from "mongoose"
 import User from "../models/User.js"
 import Course from "../models/Course.js"
 import Category from "../models/Categorym.js"
