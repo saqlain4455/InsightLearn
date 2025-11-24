@@ -1,28 +1,35 @@
-import mongoose from "mongoose";
-import nodemailer from "nodemailer"
+import nodemailer from "nodemailer";
 
-const sendMailer = async (email,title,body)=>{
-    try{
-        const crateTransporter= nodemailer.createTransport({
-            host:process.env.MAIL_HOST,
-            auth:{
-                user:process.env.MAIL_USER,
-                pass:process.env.MAIL_PASS
-            },
-              pool: true,
-            maxConnections:5,
-            rateLimit:3
-        })
+const sendMailer = async (email, title, body) => {
+  try {
+    const crateTransporter = nodemailer.createTransport({
+      host: process.env.MAIL_HOST,        // smtp.zoho.in
+      port: process.env.MAIL_PORT,        // 465
+      secure: true,                       // SSL ON
+      auth: {
+        user: process.env.MAIL_USER,      // your zoho mail
+        pass: process.env.MAIL_PASS       // your app password
+      },
+      pool: true,
+      maxConnections: 5,
+      rateLimit: 3
+    });
 
-             let sender= await crateTransporter.sendMail({
-                from:"saqlain4881@gmail.com",
-                to:`${email}`,
-                subject:`${title}`,
-                html:`${body}`
-             })
-    }catch(error){
-        console.log("error occured in the email",error)
-    }
-} 
-export default sendMailer
+    const sender = await crateTransporter.sendMail({
+      from: process.env.MAIL_USER,
+      to: email,
+      subject: title,
+      html: body
+    });
+
+    return sender;   // THIS IS REQUIRED
+  } catch (error) {
+    console.log("EMAIL ERROR:", error);
+    return null;
+  }
+};
+
+export default sendMailer;
+
+
    
