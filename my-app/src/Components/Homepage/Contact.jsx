@@ -11,7 +11,7 @@ const ContactForm = () => {
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-
+console.log(form)
   const changeHandler = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     if (errors[e.target.name]) {
@@ -54,11 +54,16 @@ const ContactForm = () => {
         "POST",
         {},
         {},
-        form
+        
+        {
+          name:form.name,
+          email:form.email,
+          message:form.message
+        }
       );
 
      
-      
+      console.log(res)
       if(res){
         toast.success("Sent successfully")
       }

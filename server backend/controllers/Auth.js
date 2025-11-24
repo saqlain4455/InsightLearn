@@ -65,7 +65,8 @@ import ProfileUser from "../models/Profile.js"
       email,
       password,
       confirmPassword,
-      accountType
+      accountType,
+      otp
     } = req.body;
 
     // Validate inputs
@@ -75,7 +76,8 @@ import ProfileUser from "../models/Profile.js"
       !lastName ||
       !password ||
       !confirmPassword ||
-      !accountType
+      !accountType||
+      !otp
     ) {
       return res.status(400).json({
         message: "All fields are required"
@@ -97,6 +99,7 @@ import ProfileUser from "../models/Profile.js"
       });
     }
 
+    
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -108,6 +111,12 @@ import ProfileUser from "../models/Profile.js"
       contactNumber: null
     });
 
+    const verifyotp = Otp.findOne({otp:otp})
+      if(!verifyotp){
+        return res.send(401).json({
+          message:"otp is not valid"
+        })
+      }
     // Create user
     const user = await User.create({
       firstName,
@@ -174,18 +183,18 @@ export const login = async (req, res) => {
       { expiresIn: "2h" }
     );
 
-    // Remove password before sending user object
+    
     user.password = undefined;
 
     // Set cookie for cross-origin frontend
     const cookieOptions = {
-  httpOnly: true,                         // cannot be accessed by JS
-  secure: true,                           // required for HTTPS in production
-  sameSite: "none",                       // cross-origin support
-  expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days
+  httpOnly: true,                         
+  secure: true,                           
+  sameSite: "none",                       
+  expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), 
 };
 
-    // Set cookie and send response
+   
     return res
       .cookie("token", token, cookieOptions)
       .status(200)

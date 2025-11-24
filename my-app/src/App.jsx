@@ -34,11 +34,11 @@ function App() {
         <Route path='/' element={ <Home />} />
         <Route path="/Login" element={<Login />}/>
         <Route path='/signup' element={<Info />} />
-        <Route  path='verifyotp' element={<VerifyOtp />}/>
+        <Route  path='/verifyotp' element={<VerifyOtp />}/>
         <Route path='/otp' element= {<Otp />} />
         <Route path='/coursecreate' element={<CreateCourse />}/>
        <Route path='/section'  element={<Section />} />
-      <Route path='/subsection/:id' element={<Section2 />} />
+      <Route path='/subsection' element={<Section2 />} />
       <Route path='/courseDetails' element={<CourseComponent />} />
       <Route path='/Details' element={<Coursedetails />} />
       <Route path='/dashboard' element={<DashBoard />} />

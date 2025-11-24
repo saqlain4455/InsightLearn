@@ -20,8 +20,8 @@ const ReviewPage = () => {
       const response = await connectionApi(
         Ratings.CREATE_REVIEW, 
         "POST",
-        null,
-        null,
+        {},
+        {},
         { courseId: courseId, rating: rating, review: review }
       );
 

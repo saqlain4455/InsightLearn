@@ -4,15 +4,15 @@ import { BookOpen, Tag, User, PlayCircle, CheckCircle, Star } from "lucide-react
 import { connectionApi } from "../../services/apiconnector";
 import { useState ,useEffect} from 'react';
 const CategoryCourseDetails = ({data}) => {
-   
+   console.log(data)
   const [avgRating, setAvgRating] = useState(0);
  
   async function AverageRating(){
     try{
       const response = await connectionApi(Ratings.AVGRATING,
                                             "POST",
-                                            null,
-                                            null,
+                                            {},
+                                            {},
                                             {courseId:data._id}
       )
      

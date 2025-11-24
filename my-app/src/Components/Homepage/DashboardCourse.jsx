@@ -11,7 +11,7 @@ import {
   CheckCircle,
   Award
 } from "lucide-react";
-
+import { useSelector } from "react-redux";
 const DashboardCourse = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -19,9 +19,11 @@ const DashboardCourse = () => {
   const [activeVideo, setActiveVideo] = useState(null);  
   
   const data = location.state.details;
+  console.log(data)
   const courseId = data._id;
- 
-
+  
+ const userType= useSelector((state)=>state.auth.token.user.accountType)||null
+  
   function handleReviewClick() {
     navigate("/review", {
       state: {
@@ -106,7 +108,7 @@ const DashboardCourse = () => {
                 </div>
               </div>
 
-              {/* Review Button */}
+              {userType==="Student"&&(
               <button
                 onClick={handleReviewClick}
                 className="mt-4 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 
@@ -118,6 +120,7 @@ const DashboardCourse = () => {
                 <Star size={20} />
                 Give Rating & Review
               </button>
+                )}
             </div>
           </div>
         </div>

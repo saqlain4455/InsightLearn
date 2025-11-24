@@ -7,7 +7,7 @@ import { BookOpen, Upload, DollarSign, Tag, FolderOpen, FileText, Target } from 
 import {useSelector} from "react-redux"
 const CreateCourse = () => {
   const token2 = useSelector(state => state.auth.token);
-  const token=token2.token // this should be the string
+  const token=token2.token 
 console.log("Token used:", token); 
   const [formData, setFormData] = useState({
     courseName: "",
@@ -62,10 +62,10 @@ console.log("Token used:", token);
 
     setLoading(true);
 
-    // Get token from localStorage (saved on login)
+    
    
 
-    // Send FormData + Authorization header
+   
     const res = await connectionApi(
       Course.CREATE_COURSE,
       "POST",
@@ -74,9 +74,11 @@ console.log("Token used:", token);
       fd
     );
 
-    console.log("Course created successfully", res);
+    console.log("Course created successfully", res.data.data._id);
     setLoading(false);
-    navigate("/section");
+    navigate("/section",{
+      state:{courseId:res.data.data._id}
+    });
   } catch (error) {
     setLoading(false);
     console.error("Error while creating course:", error.response?.data || error.message);

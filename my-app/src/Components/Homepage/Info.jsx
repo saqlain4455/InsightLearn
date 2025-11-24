@@ -34,26 +34,11 @@ const Info = () => {
 
    async function clicked() {
     console.log("function is clicked ")
-     try {
-      const data = await connectionApi(
-        Auth.SIGN_UP,
-        "POST",
-        {},
-        {},
-        {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          password: user.password,
-          confirmPassword: user.confirmPassword,
-          email: user.email,
-          accountType: user.accountType,
-          
-        }
-      );
-      console.log(data)
-      if(data){
-        navigate("/login")
-      }
+    
+      
+     try{
+        navigate("/verifyotp")
+      
 
   }catch(error){
       console.log("something went wrong:",error)

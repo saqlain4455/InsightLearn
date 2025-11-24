@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { connectionApi } from "../../services/apiconnector";
 import { section } from "../../services/apis";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import Button from "./Button";
 import { Course } from "../../services/apis";
 import { FolderOpen, Plus, ChevronRight, BookOpen, Layers } from "lucide-react";
@@ -10,14 +10,15 @@ import { FolderOpen, Plus, ChevronRight, BookOpen, Layers } from "lucide-react";
 const Section = () => {
   const [sectionName, setSectionName] = useState("");
   const [sections, setSections] = useState([]);
-
+  console.log(sectionName)
   // ✅ Get token and user info at top level
-  const tokenObj = useSelector((state) => state.auth.token);
-  const token = tokenObj?.token; // raw JWT string
-  const courseId = tokenObj?.user?.courses[tokenObj.user.courses.length - 1];
+
+   const tokenObj = useSelector((state) => state.auth.token);
+  const token = tokenObj?.token;
 
   const navigate = useNavigate();
-
+  const location=useLocation()
+  const courseId= location.state?.courseId
   useEffect(() => {
     fetchCourseSections();
   }, []);
@@ -29,7 +30,7 @@ const Section = () => {
         Course.GET_DETAILS,
         "POST",
         { Authorization: `Bearer ${token}` }, // token added
-        null,
+        {},
         { courseId }
       );
       setSections(res.data.data.courseContent);
@@ -52,8 +53,8 @@ const Section = () => {
         section.CREATE_SECTION,
         "POST",
         { Authorization: `Bearer ${token}` }, // token added
-        null,
-        { courseId, sectionName }
+        {},
+        { courseId:courseId, sectionName:sectionName }
       );
 
       console.log("Section created successfully:", res.data);
@@ -166,7 +167,9 @@ const Section = () => {
                              shadow-lg shadow-sky-500/30 hover:shadow-sky-500/50
                              transition-all duration-300 hover:scale-105
                              self-start sm:self-center"
-                  onClick={() => navigate(`/subsection/${sec._id}`)}
+                  onClick={() => navigate("/subsection",{
+                    state :{sectionId:sec._id}
+                  })}
                 >
                   <span>Manage Subsections</span>
                   <ChevronRight size={18} />

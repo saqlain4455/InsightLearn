@@ -11,13 +11,14 @@ const Otp = () => {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  console.log(user)
   function handleInput(e) {
     const { name, value } = e.target;
     dispatch(setUser({ [name]: value }));
   }
 
   async function handleSubmit() {
+    console.log("clicked")
     if (!user.otp) {
       toast.error("Please enter your OTP");
       return;
@@ -27,8 +28,8 @@ const Otp = () => {
       const data = await connectionApi(
         Auth.SIGN_UP,
         "POST",
-        null,
-        null,
+        {},
+        {},
         {
           firstName: user.firstName,
           lastName: user.lastName,
@@ -36,10 +37,10 @@ const Otp = () => {
           confirmPassword: user.confirmPassword,
           email: user.email,
           accountType: user.accountType,
-          
+          otp:user.otp
         }
       );
-
+      console.log(data)
       if (data) {
         toast.success("OTP verification successful!");
         navigate("/login");
@@ -48,6 +49,7 @@ const Otp = () => {
       }
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
+      console.log(error)
     }
   }
 
@@ -63,10 +65,11 @@ const Otp = () => {
           onChange={handleInput}
           className="px-4 py-2 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-yellow-500"
         />
-
-        <Button active={true} onClick={handleSubmit}>
+        <div onClick={handleSubmit}>
+        <Button active={true} >
           Verify & Continue
         </Button>
+        </div>
       </div>
     </div>
   );

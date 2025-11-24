@@ -28,8 +28,8 @@ const CourseComponent = () => {
       const res = await connectionApi(
         Course.GETFULL_COURSEDETAILS,
         "POST",
-        null,
-        null,
+        {},
+        {},
         { courseId, userId }
       );
       if (res) {

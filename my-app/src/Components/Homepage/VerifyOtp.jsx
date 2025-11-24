@@ -2,22 +2,24 @@ import { useSelector } from 'react-redux';
 import Button from './Button.jsx';
 import { connectionApi } from '../../services/apiconnector.js';
 import { Auth } from '../../services/apis.js';
-
+import {useNavigate} from "react-router-dom"
 const VerifyOtp = () => {
   const { user } = useSelector((state) => state.user);
   console.log(user.email)
+  const navigate=useNavigate()
   const clicked = async () => {
     try {
       const getOtp = await connectionApi(
         Auth.GENERATE_OTP,
         "POST",
-        null,
-        null,
+        {},
+        {},
         { email: user.email }
       );
       console.log(getOtp);
       if(getOtp){
         console.log("otp wentn throught here ")
+        navigate("/otp")
       }
     } catch (error) {
       console.log("Error while verification of email", error);

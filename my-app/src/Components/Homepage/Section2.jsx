@@ -4,10 +4,14 @@ import { connectionApi } from "../../services/apiconnector";
 import { subsection } from "../../services/apis";
 import Button from "./Button";
 import { Video, Clock, FileText, Upload, CheckCircle } from "lucide-react";
-
+import { useNavigate,useLocation } from "react-router-dom";
+import { IoNuclearOutline } from "react-icons/io5";
 const Section2 = () => {
-  const { id } = useParams();
-
+  const loacation = useLocation()
+  const data= loacation.state?.sectionId
+  console.log(data)
+  
+  const navigate = useNavigate()
   const [form, setForm] = useState({
     title: "",
     timeDuration: "",
@@ -33,7 +37,7 @@ const Section2 = () => {
 
   async function createSection2() {
     const fd = new FormData();
-    fd.append("sectionId", id);
+    fd.append("sectionId", data);
     fd.append("title", form.title);
     fd.append("timeDuration", form.timeDuration);
     fd.append("description", form.description);
@@ -44,12 +48,13 @@ const Section2 = () => {
         subsection.CREATE_SUBSECTION,
         "POST",
         {},
-        null,
+        {},
         fd
       );
-
-      console.log("Subsection created");
-      
+      if(res){
+        navigate("/dashboard")
+      console.log("Subsection created",res);
+      }
       // Reset form after success
       setForm({ title: "", timeDuration: "", description: "" });
       setFile(null);
@@ -202,7 +207,7 @@ const Section2 = () => {
           {/* Submit Button */}
           <div className="flex justify-center pt-4">
             <div onClick={createSection2}>
-              <Button active={true} linkto={"/dashboard"}>
+              <Button active={true} >
                 <div className="flex items-center gap-2">
                   <CheckCircle size={18} />
                   Create Subsection
