@@ -6,62 +6,38 @@ import jwt from "jsonwebtoken"
 import sendMailer from "../utils/mail.js"
 import bcrypt from "bcrypt";
 import ProfileUser from "../models/Profile.js"
-
- export const sendOtp = async (req, res) => {
+export const sendOtp = async (req, res) => {
   try {
     const { email } = req.body;
-    console.log(email)
-    if (!email) {
-      return res.status(404).json({ message: "email is not defined" });
-    }
+    if (!email) return res.status(404).json({ message: "email is not defined" });
 
     const checkEmail = await User.findOne({ email });
-    if (checkEmail) {
-      return res.status(400).json({ message: "email already exist" });
-    }
+    if (checkEmail) return res.status(400).json({ message: "email already exist" });
 
-    // Generate OTP
-    let otp = otpgenerator.generate(6, {
-      upperCaseAlphabets: false,
-      specialChars: false,
-      lowerCaseAlphabets: false,
-    });
-
-    // Check uniqueness correctly
+    let otp = otpgenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
     let already = await Otp.findOne({ otp });
     while (already) {
-      otp = otpgenerator.generate(6, {
-        upperCaseAlphabets: false,
-        specialChars: false,
-        lowerCaseAlphabets: false,
-      });
-
+      otp = otpgenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
       already = await Otp.findOne({ otp });
     }
 
-    // Save OTP
-    await Otp.create({
-      email: email,
-      otp: otp,
-    });
+    await Otp.create({ email, otp });
 
+    // Await mail sending
+    const mailResponse = await sendMailer(
+      email,
+      "Verifying OTP",
+      `<h2>Your OTP: ${otp}</h2>`
+    );
+    console.log("Mail response:", mailResponse);
 
-      sendMailer(
-       email,
-          "verifying the otp here",
-          otp
-     ).then(resd=>console.log("data recieved",resd))
-     .catch(err=> console.log("error occured",err))
-     
-    return res.status(200).json({
-      message: "otp generated successfully",
-    });
+    return res.status(200).json({ message: "OTP generated successfully" });
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("SEND OTP ERROR:", error);
+    return res.status(500).json({ message: error.message });
   }
 };
+
 
 
 
