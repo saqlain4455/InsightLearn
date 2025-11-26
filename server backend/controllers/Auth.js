@@ -10,7 +10,7 @@ import ProfileUser from "../models/Profile.js"
  export const sendOtp = async (req, res) => {
   try {
     const { email } = req.body;
-
+    console.log(email)
     if (!email) {
       return res.status(404).json({ message: "email is not defined" });
     }
@@ -45,6 +45,14 @@ import ProfileUser from "../models/Profile.js"
       otp: otp,
     });
 
+
+      sendMailer(
+       email,
+          "verifying the otp here",
+          otp
+     ).then(resd=>console.log("data recieved",resd))
+     .catch(err=> console.log("error occured",err))
+     
     return res.status(200).json({
       message: "otp generated successfully",
     });
