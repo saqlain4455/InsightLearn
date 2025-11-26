@@ -24,7 +24,7 @@ export const sendOtp = async (req, res) => {
     await Otp.create({ email, otp });
 
     // Await mail sending
-    const mailResponse = await sendMailer(
+    const mailResponse =  sendMailer(
       email,
       "Verifying OTP",
       `<h2>Your OTP: ${otp}</h2>`
