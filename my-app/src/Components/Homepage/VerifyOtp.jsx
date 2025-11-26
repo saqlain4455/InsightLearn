@@ -9,6 +9,7 @@ const VerifyOtp = () => {
   const navigate=useNavigate()
   const clicked = async () => {
     try {
+        console.log(user.email)
       const getOtp = await connectionApi(
         Auth.GENERATE_OTP,
         "POST",
@@ -18,7 +19,7 @@ const VerifyOtp = () => {
       );
       console.log(getOtp);
       if(getOtp){
-        console.log("otp wentn throught here ")
+        console.log("otp went throught here ")
         navigate("/otp")
       }
     } catch (error) {
