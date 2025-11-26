@@ -6,40 +6,60 @@ import jwt from "jsonwebtoken"
 import sendMailer from "../utils/mail.js"
 import bcrypt from "bcrypt";
 import ProfileUser from "../models/Profile.js"
+
 export const sendOtp = async (req, res) => {
   try {
     const { email } = req.body;
-    if (!email) return res.status(404).json({ message: "email is not defined" });
+    console.log(email);
+
+    if (!email) {
+      return res.status(404).json({ message: "email is not defined" });
+    }
 
     const checkEmail = await User.findOne({ email });
-    if (checkEmail) return res.status(400).json({ message: "email already exist" });
+    if (checkEmail) {
+      return res.status(400).json({ message: "email already exist" });
+    }
 
-    let otp = otpgenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
+    // Generate OTP
+    let otp = otpgenerator.generate(6, {
+      upperCaseAlphabets: false,
+      specialChars: false,
+      lowerCaseAlphabets: false,
+    });
+
+    // Ensure uniqueness
     let already = await Otp.findOne({ otp });
     while (already) {
-      otp = otpgenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
+      otp = otpgenerator.generate(6, {
+        upperCaseAlphabets: false,
+        specialChars: false,
+        lowerCaseAlphabets: false,
+      });
       already = await Otp.findOne({ otp });
     }
 
+    // Save OTP
     await Otp.create({ email, otp });
 
-    // Await mail sending
-    const mailResponse =  sendMailer(
-      email,
-      "Verifying OTP",
-      `<h2>Your OTP: ${otp}</h2>`
-    );
-    console.log("Mail response:", mailResponse);
+    // Send email asynchronously (non-blocking)
+    setImmediate(() => {
+      sendMailer(
+        email,
+        "verifying the otp here",
+        `<h2>Your OTP is: ${otp}</h2>`
+      )
+        .then(resd => console.log("Mail sent successfully:", resd))
+        .catch(err => console.error("Mail sending error:", err));
+    });
 
-    return res.status(200).json({ message: "OTP generated successfully" });
+    // Respond immediately to user
+    return res.status(200).json({ message: "otp generated successfully" });
+
   } catch (error) {
-    console.error("SEND OTP ERROR:", error);
     return res.status(500).json({ message: error.message });
   }
 };
-
-
-
 
  export const SignUp = async (req, res) => {
   try {
