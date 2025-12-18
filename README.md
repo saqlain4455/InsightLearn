@@ -51,13 +51,7 @@ Deployment:
 Render - Hosting platform
 
 
-📸 Screenshots
-Student Dashboard
-Show Image
-Instructor Dashboard
-Show Image
-Course Player
-Show Image
+
 
 🚀 Getting Started
 Prerequisites
