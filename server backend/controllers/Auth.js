@@ -7,7 +7,7 @@ import sendMailer from "../utils/mail.js"
 import bcrypt from "bcrypt";
 import ProfileUser from "../models/Profile.js"
 
-console.log("sendOtp controller hit");
+
 export const sendOtp = async (req, res) => {
   try {
     const { email } = req.body;
@@ -195,8 +195,8 @@ console.log("JWT_SECRET:", process.env.JWT_SECRET);
     // Set cookie for cross-origin frontend
     const cookieOptions = {
   httpOnly: true,                         
-  secure: false,                           
-  sameSite: "lax",                       
+  secure: true,                           
+  sameSite: "none",                       
   expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), 
 };
 
