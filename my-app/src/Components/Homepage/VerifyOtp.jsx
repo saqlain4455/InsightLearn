@@ -22,9 +22,9 @@ const VerifyOtp = () => {
         console.log("otp went throught here ")
         navigate("/otp")
       }
-    } catch (error) {
-      console.log("Error while verification of email", error);
-    }
+    } catch(error){
+  console.log(error.response?.data);
+}
   };
 
   return (

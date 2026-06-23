@@ -37,7 +37,10 @@ const Info = () => {
     
       
      try{
-        navigate("/verifyotp")
+        if(user){
+             navigate("/verifyotp")
+        }
+       
       
 
   }catch(error){

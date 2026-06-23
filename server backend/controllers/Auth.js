@@ -7,6 +7,7 @@ import sendMailer from "../utils/mail.js"
 import bcrypt from "bcrypt";
 import ProfileUser from "../models/Profile.js"
 
+console.log("sendOtp controller hit");
 export const sendOtp = async (req, res) => {
   try {
     const { email } = req.body;
@@ -27,6 +28,7 @@ export const sendOtp = async (req, res) => {
       specialChars: false,
       lowerCaseAlphabets: false,
     });
+    console.log(otp)
 
     // Ensure uniqueness
     let already = await Otp.findOne({ otp });
@@ -41,7 +43,7 @@ export const sendOtp = async (req, res) => {
 
     // Save OTP
     await Otp.create({ email, otp });
-
+    console.log(otp)
     // Send email asynchronously (non-blocking)
     setImmediate(() => {
       sendMailer(
@@ -160,7 +162,7 @@ export const login = async (req, res) => {
     }
 
     const user = await User.findOne({ email }).populate("additionalDetails");
-
+    console.log(user)
     if (!user) {
       return res.status(404).json({
         message: "Email is not signed in"
@@ -174,7 +176,7 @@ export const login = async (req, res) => {
         message: "Incorrect password"
       });
     }
-
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
     // Generate JWT token
     const token = jwt.sign(
       {
@@ -193,10 +195,11 @@ export const login = async (req, res) => {
     // Set cookie for cross-origin frontend
     const cookieOptions = {
   httpOnly: true,                         
-  secure: true,                           
-  sameSite: "none",                       
+  secure: false,                           
+  sameSite: "lax",                       
   expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), 
 };
+
 
    
     return res
@@ -209,10 +212,13 @@ export const login = async (req, res) => {
       });
 
   } catch (error) {
-    return res.status(500).json({
-      message: error.message
-    });
-  }
+  console.error("LOGIN ERROR:");
+  console.error(error);
+
+  return res.status(500).json({
+    message: error.message,
+  });
+}
 };
 
 
